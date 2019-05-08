@@ -1,11 +1,14 @@
 # terraform
 *.tfstate
+*.tfstate.lock.info
 *.tfstate.*.backup
 *.tfstate.backup
 *.tfvars
 .terraform/
 
 # ansible
+*.retry
+inventory.gcp.yml
 
 # packer
 packer/variables.json
