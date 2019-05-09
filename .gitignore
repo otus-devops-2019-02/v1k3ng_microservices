@@ -11,4 +11,4 @@
 inventory.gcp.yml
 
 # packer
-packer/variables.json
+variables.json
