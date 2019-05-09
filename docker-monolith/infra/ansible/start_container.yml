@@ -1,0 +1,14 @@
+---
+- name: start docker container
+  hosts: all
+  become: yes
+  tasks:
+    - name: pull image
+      docker_image:
+        name: mad72/otus-reddit:1.0
+
+    - name: start docker container with app
+      docker_container:
+        name: reddit-app
+        image: mad72/otus-reddit:1.0
+        published_ports: "9292:9292"

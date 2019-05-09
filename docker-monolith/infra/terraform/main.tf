@@ -16,12 +16,12 @@ resource "google_compute_project_metadata" "default" {
   }
 }
 
-resource "google_compute_instance" "app" {
+resource "google_compute_instance" "docker-app" {
   name         = "reddit-app-${count.index}"
   machine_type = "g1-small"
   zone         = "europe-west1-b"
   count        = "${var.number_of_instanses}"
-  tags         = ["reddit-app-${count.index}"]
+  tags         = ["reddit-app-${count.index}", "reddit-app-docker"]
 
   # определение загрузочного диска
   boot_disk {
@@ -43,4 +43,23 @@ resource "google_compute_instance" "app" {
     # путь до публичного ключа
     ssh-keys = "appuser:${file(var.public_key_path)}"
   }
+}
+
+resource "google_compute_firewall" "firewall_reddit" {
+  name = "allow-reddit-in-container"
+
+  # Название сети, в которой действует правило
+  network = "default"
+
+  # Какой доступ разрешить
+  allow {
+    protocol = "tcp"
+    ports    = ["9292"]
+  }
+
+  # Каким адресам разрешаем доступ
+  source_ranges = ["0.0.0.0/0"]
+
+  # Правило применимо для инстансов с перечисленными тэгами
+  target_tags = ["reddit-app-docker"]
 }
