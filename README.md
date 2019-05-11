@@ -26,7 +26,14 @@ docker build -t mad72/ui:1.0 ./ui
 **docker exec -it <container_name> /bin/bash** - подключиться к шеллу контейнера (без docker-machine)  
 **docker network create reddit** - создать сеть reddit для контейнеров  
 
-Запускаем сразу всю пачку созданных контейнеров:
+Запускаем сразу всю пачку созданных контейнеров (без volume):
+```
+docker run --rm -d --network=reddit --network-alias=post_db --network-alias=comment_db mongo:latest
+docker run --rm -d --network=reddit --network-alias=post mad72/post:1.0
+docker run --rm -d --network=reddit --network-alias=comment mad72/comment:1.0
+docker run --rm -d --network=reddit -p 9292:9292 mad72/ui:1.0
+```
+Запускаем сразу всю пачку созданных контейнеров (с volume):
 ```
 docker run --rm -d --network=reddit --network-alias=post_db --network-alias=comment_db -v reddit_db:/data/db mongo:latest
 docker run --rm -d --network=reddit --network-alias=post mad72/post:1.0
@@ -67,6 +74,7 @@ docker build --squash -t mad72/comment:1.0 ./comment
 docker build --squash -t mad72/ui:1.0 ./ui
 ```
 **docker volume create reddit_db** - создать volume  
+После чего подключаем volume ключом **-v reddit_db:/data/db**  
 
 
 # Readme homework #15
