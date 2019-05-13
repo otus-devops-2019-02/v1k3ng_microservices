@@ -1,4 +1,4 @@
-FROM alpine:3.7
+FROM alpine:3.7 AS first
 
 ENV POST_SERVICE_HOST post
 ENV POST_SERVICE_PORT 5000
@@ -19,7 +19,17 @@ RUN apk add --update --no-cache --virtual tmp gcc make musl-dev ruby ruby-dev ru
     && apk add --no-cache --update ruby-rdoc
 
 ADD . $APP_HOME
-CMD ["puma"]
+# CMD ["puma"]
+
+# FROM alpine:3.7
+# ENV POST_SERVICE_HOST post
+# ENV POST_SERVICE_PORT 5000
+# ENV COMMENT_SERVICE_HOST comment
+# ENV COMMENT_SERVICE_PORT 9292
+# COPY --from=first /app .
+# COPY --from=first /root .
+# RUN apk add --update --no-cache ruby-rdoc
+# CMD ["puma"]
 
 # FROM ruby:2.2
 
