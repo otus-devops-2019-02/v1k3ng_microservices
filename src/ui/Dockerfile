@@ -12,13 +12,12 @@ WORKDIR $APP_HOME
 ADD Gemfile* $APP_HOME/
 
 RUN apk add --update --no-cache --virtual tmp gcc make musl-dev ruby ruby-dev ruby-bundler ruby-rdoc ruby-irb \
-    && && PATH="$PATH:/root/.gem/ruby/2.4.0/bin" \
-    && gem install --user-install --no-rdoc bundler \
-    && bundle install --no-cache --clean --path=.\
+    && gem install --no-rdoc bundler \
+    && bundle install --no-cache \
     && bundle clean --force \
-    && apk del tmp    
-    # && apk add --no-cache --update ruby-rdoc
-# /root/.local/bin
+    && apk del tmp \    
+    && apk add --update --no-cache ruby-rdoc
+
 ADD . $APP_HOME
 CMD ["puma"]
 
