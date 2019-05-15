@@ -1,5 +1,17 @@
 [![Build Status](https://travis-ci.com/otus-devops-2019-02/v1k3ng_microservices.svg?branch=master)](https://travis-ci.com/otus-devops-2019-02/v1k3ng_microservices)
 
+# Readme homework #16
+
+**docker run -ti --rm --network none joffotron/docker-net-tools -c ifconfig** - запуск с параметром --network none (без сети, только loopback)  
+
+**docker run -ti --rm --network host joffotron/docker-net-tools -c ifconfig** - запуск с параметром --network host (сеть хостовой машины)
+
+**docker network connect \<network\> \<container\>** - подключение дополнительных сетей к уже бегущему контейнеру  
+
+### Задание на странице 36
+Можно в файле .env задать переменную COMPOSE_PROJECT_NAME в которой указать имя проекта. Это имя проекта станет префиксом для всех сущностей проекта. Кроме того, опытным путем выяснено, что перфикс зависит от имени директории, в которой находится docker-compose.yml.
+Также можно указать ключ -p (--project-name) NAME и в нем указать нужное имя проекта.  
+
 
 # Readme homework #16
 
