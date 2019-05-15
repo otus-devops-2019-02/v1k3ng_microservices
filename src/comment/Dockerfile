@@ -1,4 +1,4 @@
-FROM alpine:3.7
+FROM alpine:3.7 AS first
 
 ENV COMMENT_DATABASE_HOST comment_db
 ENV COMMENT_DATABASE comments
@@ -8,6 +8,7 @@ RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
 
 ADD Gemfile* $APP_HOME/
+
 RUN apk add --update --no-cache --virtual tmp gcc make musl-dev ruby ruby-dev ruby-bundler ruby-rdoc ruby-irb \
     && gem install bundler \
     && bundle install --no-cache \
@@ -17,6 +18,15 @@ RUN apk add --update --no-cache --virtual tmp gcc make musl-dev ruby ruby-dev ru
 
 ADD . $APP_HOME
 CMD ["puma"]
+
+# FROM alpine:3.7
+# ENV COMMENT_DATABASE_HOST comment_db
+# ENV COMMENT_DATABASE comments
+# COPY --from=first /app .
+# COPY --from=first /root .
+# WORKDIR /app
+# RUN apk add --update --no-cache ruby-rdoc
+# CMD ["puma"]
 
 # FROM ruby:2.2
 
