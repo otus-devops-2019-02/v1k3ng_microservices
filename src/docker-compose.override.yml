@@ -15,6 +15,8 @@ services:
     ports:
       - ${SERVPORT}:${SERVPORT}/tcp
     command: ["puma", "--debug", "-w 2"]
+    volumes:
+      - ./ui:/app
     networks:
       front_net:
         aliases: 
@@ -22,6 +24,8 @@ services:
   post:
     build: ./post-py
     image: ${USERNAME}/post:${SERVVERS}
+    volumes:
+      - ./post-py:/app
     networks:
       back_net:
         aliases: 
@@ -32,6 +36,8 @@ services:
   comment:
     build: ./comment
     image: ${USERNAME}/comment:${SERVVERS}
+    volumes:
+      - ./comment:/app
     networks:
       back_net:
         aliases: 
