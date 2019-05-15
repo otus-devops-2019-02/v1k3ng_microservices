@@ -13,13 +13,13 @@ services:
     build: ./ui
     image: ${USERNAME}/ui:${SERVVERS}
     ports:
-      - ${SERVPORT}:${SERVPORT}/tcp
+      - "${SERVPORT}:${SERVPORT}/tcp"
     command: ["puma", "--debug", "-w 2"]
     volumes:
       - ./ui:/app
     networks:
       front_net:
-        aliases: 
+        aliases:
           - ui
   post:
     build: ./post-py
