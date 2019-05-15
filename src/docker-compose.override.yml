@@ -13,7 +13,10 @@ services:
     build: ./ui
     image: ${USERNAME}/ui:${SERVVERS}
     ports:
-      - "${SERVPORT}:${SERVPORT}/tcp"
+      - protocol: tcp
+        published: ${SERVPORT}
+        target: ${SERVPORT}
+      # - "${SERVPORT}:${SERVPORT}/tcp"
     command: ["puma", "--debug", "-w 2"]
     volumes:
       - ./ui:/app
