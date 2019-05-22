@@ -5,8 +5,12 @@ stages:
   - test
   - deploy
 
+<<<<<<< HEAD
 variables:
   DATABASE_URL: 'mongodb://mongo/user_posts'
+=======
+DATABASE_URL: 'mongodb://mongo/user_posts'
+>>>>>>> 0f3f100d8e5355de874d5018c4489f7f21a7b7bc
 
 before_script:
   - cd reddit
