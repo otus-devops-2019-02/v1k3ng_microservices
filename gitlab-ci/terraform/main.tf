@@ -45,10 +45,6 @@ resource "google_compute_instance" "gitlab-ci" {
   }
 
   provisioner "remote-exec" {
-    // inline = ["sudo apt -y install python",
-    //         "sudo mkdir -p /srv/gitlab/config /srv/gitlab/data /srv/gitlab/logs",
-    //         "sudo touch /srv/gitlab/docker-compose.yml"
-    //   ]
     inline = ["sudo mkdir -p /srv/gitlab/config /srv/gitlab/data /srv/gitlab/logs"]
     connection {
       type        = "ssh"
@@ -59,6 +55,15 @@ resource "google_compute_instance" "gitlab-ci" {
 
   provisioner "local-exec" {
     command = "ansible-playbook -u appuser -i '${self.network_interface.0.access_config.0.nat_ip},' -e \"host_ip='${self.network_interface.0.access_config.0.nat_ip}'\" --private-key ${var.private_key_path} ../ansible/provision.yml" 
+  }
+
+  provisioner "remote-exec" {
+    inline = ["cd /srv/gitlab/ && sudo docker-compose up -d"]
+    connection {
+      type        = "ssh"
+      user        = "appuser"
+      private_key = "${file(var.private_key_path)}"
+    }
   }
 }
 

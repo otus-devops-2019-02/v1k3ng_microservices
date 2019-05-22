@@ -1,9 +1,10 @@
 ---
 - name: Install DOCKER
   hosts: all
+  gather_facts: no
   vars:
    host_ip: "{{ ansible_default_ipv4.address }}"
-  become: true
+  become: yes
   tasks:
     - name: install python, python-apt for ansible
       raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal python-apt)
