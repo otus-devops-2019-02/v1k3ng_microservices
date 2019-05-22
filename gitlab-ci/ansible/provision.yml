@@ -44,6 +44,12 @@
       template:
         src: templates/docker-compose.yml.j2
         dest: /srv/gitlab/docker-compose.yml
+
+    - name: adding appuser to docker group
+      user:
+        name: appuser
+        groups: docker
+        append: yes
   # handlers:
   # - name: reload puma
   #   become: true
