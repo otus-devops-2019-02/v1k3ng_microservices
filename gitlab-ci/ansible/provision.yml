@@ -50,6 +50,7 @@
         name: appuser
         groups: docker
         append: yes
+
   # handlers:
   # - name: reload puma
   #   become: true
