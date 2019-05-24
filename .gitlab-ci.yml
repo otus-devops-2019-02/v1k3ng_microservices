@@ -18,9 +18,7 @@ build_job:
   stage: build
   script:
     - echo 'Building'
-    - ls -l
-    - echo '###############################################'
-    - pwd
+    - docker build .
 
 test_unit_job:
   stage: test
