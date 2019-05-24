@@ -17,7 +17,10 @@ before_script:
 build_job:
   stage: build
   script:
-    - echo 'Building'
+    - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    - add-apt-repository "deb https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    - apt-get update
+    - apt-get install docker-ce
     - docker build .
 
 test_unit_job:
