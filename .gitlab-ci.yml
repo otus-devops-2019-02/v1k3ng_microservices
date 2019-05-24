@@ -2,6 +2,9 @@
 # image: alpine:3.7
 image: docker:stable
 
+services:
+  - docker:dind
+
 stages:
   - build
   - test
