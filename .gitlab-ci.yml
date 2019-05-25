@@ -20,6 +20,7 @@ build_job:
   stage: build
   script:
     # - docker build -t my-docker-image .
+    # - docker build -t my-docker-image .
     - echo 'Build_job'
 
 test_unit_job:
