@@ -32,7 +32,8 @@ test_unit_job:
   # - ruby:2.4.2
   - mongo:latest
   script:
-  - ruby simpletest.rb
+    - gem install bigdecimal
+    - ruby simpletest.rb
 
 test_integration_job:
   stage: test
