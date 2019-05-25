@@ -22,6 +22,7 @@ variables:
 build_job:
   stage: build
   services:
+    - docker:stable
     - docker:dind
   script:
   # - docker info
