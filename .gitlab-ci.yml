@@ -2,9 +2,6 @@
 # image: alpine:3.7
 image: docker:stable
 
-services:
-  - docker:dind
-
 stages:
   - build
   - test
@@ -32,8 +29,6 @@ build_job:
 test_unit_job:
   stage: test
   services:
-  - docker:dind
-  - ruby:2.4.2
   - mongo:latest
   script:
   - ruby simpletest.rb
