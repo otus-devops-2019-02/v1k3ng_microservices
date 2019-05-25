@@ -33,6 +33,7 @@ test_unit_job:
   - mongo:latest
   script:
     - gem install bigdecimal
+    - gem install test-unit
     - ruby simpletest.rb
 
 test_integration_job:
