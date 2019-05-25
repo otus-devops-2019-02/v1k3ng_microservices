@@ -26,6 +26,7 @@ build_job:
   script:
     # - apk add --update --no-cache --virtual tmp libc-dev gcc make musl-dev ruby ruby-dev ruby-rdoc ruby-irb ruby-json ruby-bundler
     # - docker build -t my-docker-image .
+    - echo 'Build_job'
 
 test_unit_job:
   stage: test
