@@ -21,6 +21,7 @@ build_job:
   script:
     # - docker build -t my-docker-image .
     # - docker build -t my-docker-image .
+    # - docker build -t my-docker-image .
     - echo 'Build_job'
     - sleep 60
 
