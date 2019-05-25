@@ -1,6 +1,6 @@
-# image: ruby:2.4.2
+image: ruby:2.4.2
 # image: alpine:3.7
-image: docker:stable
+# image: docker:stable
 
 stages:
   - build
