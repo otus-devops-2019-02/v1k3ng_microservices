@@ -24,12 +24,15 @@ before_script:
 
 build_job:
   stage: build
+  services:
+    - docker:dind
   script:
     - docker build -t my-docker-image .
 
 test_unit_job:
   stage: test
   services:
+  - docker:dind
   - ruby:2.4.2
   - mongo:latest
   script:
