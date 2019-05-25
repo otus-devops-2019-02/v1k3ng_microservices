@@ -18,6 +18,7 @@ before_script:
 
 build_job:
   stage: build
+  image: docker:stable
   services:
   #   - docker:stable
     - docker:dind
