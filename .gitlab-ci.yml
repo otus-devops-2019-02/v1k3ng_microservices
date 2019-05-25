@@ -18,23 +18,15 @@ before_script:
 
 build_job:
   stage: build
-  image: docker:stable
-  services:
-  #   - docker:stable
-    - docker:dind
   script:
-    # - apk add --update --no-cache --virtual tmp libc-dev gcc make musl-dev ruby ruby-dev ruby-rdoc ruby-irb ruby-json ruby-bundler
     - docker build -t my-docker-image .
     - echo 'Build_job'
 
 test_unit_job:
   stage: test
   services:
-  # - ruby:2.4.2
-  - mongo:latest
+    - mongo:latest
   script:
-    # - gem install bigdecimal
-    # - gem install test-unit
     - ruby simpletest.rb
 
 test_integration_job:
