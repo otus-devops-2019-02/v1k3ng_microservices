@@ -23,7 +23,7 @@ build_job:
   services:
     - docker:dind
   script:
-    - - apk add --update --no-cache --virtual tmp libc-dev gcc make musl-dev ruby ruby-dev ruby-rdoc ruby-irb ruby-json ruby-bundler
+    - apk add --update --no-cache --virtual tmp libc-dev gcc make musl-dev ruby ruby-dev ruby-rdoc ruby-irb ruby-json ruby-bundler
     - docker build -t my-docker-image .
 
 test_unit_job:
