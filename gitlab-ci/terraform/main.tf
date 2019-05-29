@@ -54,7 +54,7 @@ resource "google_compute_instance" "gitlab-ci" {
   }
 
   provisioner "local-exec" {
-    command = "ansible-playbook -u appuser -i '${self.network_interface.0.access_config.0.nat_ip},' -e \"host_ip='${self.network_interface.0.access_config.0.nat_ip}'\" --private-key ${var.private_key_path} ../ansible/provision.yml" 
+    command = "ansible-playbook -u appuser -i '${self.network_interface.0.access_config.0.nat_ip},' -e \"host_ip='${self.network_interface.0.access_config.0.nat_ip}'\" --private-key ${var.private_key_path} ../ansible/gitlab-install.yml" 
   }
 
   provisioner "remote-exec" {
@@ -65,6 +65,61 @@ resource "google_compute_instance" "gitlab-ci" {
       private_key = "${file(var.private_key_path)}"
     }
   }
+}
+
+resource "google_compute_instance" "gitlab-main-runner" {
+  name         = "gitlab-main-runner"
+  machine_type = "f1-micro"
+  zone         = "europe-west1-b"
+  tags         = ["gitlab-main-runner"]
+
+  # определение загрузочного диска
+  boot_disk {
+    initialize_params {
+      image = "${var.disk_image}"
+    }
+  }
+
+  # определение сетевого интерфейса
+  network_interface {
+    # сеть, к которой присоединить данный интерфейс
+    network = "default"
+
+    # использовать IP reddit-app-ip
+    access_config = {}
+  }
+
+  metadata {
+    # путь до публичного ключа
+    ssh-keys = "appuser:${file(var.public_key_path)}"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash",
+      "export GOOGLE_APPLICATION_CREDENTIALS=$HOME/gce-credentials.json"
+      ]
+    connection {
+      type        = "ssh"
+      user        = "appuser"
+      private_key = "${file(var.private_key_path)}"
+    }
+  }
+
+  provisioner "local-exec" {
+    command = "ansible-playbook -u appuser -i '${self.network_interface.0.access_config.0.nat_ip},' -e \"host_ip='${self.network_interface.0.access_config.0.nat_ip}'\" --private-key ${var.private_key_path} ../ansible/gitlab-main-runner-install.yml" 
+  }
+
+  // provisioner "remote-exec" {
+  //   inline = [
+  //     ""
+  //     ]
+  //   connection {
+  //     type        = "ssh"
+  //     user        = "appuser"
+  //     private_key = "${file(var.private_key_path)}"
+  //   }
+  // }
 }
 
 // resource "google_compute_firewall" "firewall_gitlab-ci" {
@@ -88,7 +143,8 @@ resource "google_compute_instance" "gitlab-ci" {
 
 resource "google_compute_firewall" "firewall_http" {
   name        = "default-allow-http"
-  description = "Allow HTTP from 178.236.210.50"
+  // description = "Allow HTTP from 178.236.210.50"
+  description = "Allow HTTP from anyone"
 
   # Название сети, в которой действует правило
   network = "default"
@@ -100,7 +156,8 @@ resource "google_compute_firewall" "firewall_http" {
   }
 
   # Каким адресам разрешаем доступ
-  source_ranges = ["178.236.210.50/32"]
+  // source_ranges = ["178.236.210.50/32", "51.75.92.240/32"]
+  source_ranges = ["0.0.0.0/0"]
   target_tags = ["gitlab-ci"]
 }
 
