@@ -1,9 +1,6 @@
-# image: ruby:2.4.2
+image: ruby:2.4.2
 # image: alpine:3.7
-image: docker:stable
-
-services:
-  - docker:dind
+# image: docker:stable
 
 stages:
   - build
@@ -16,7 +13,6 @@ variables:
   DATABASE_URL: 'mongodb://mongo/user_posts'
 
 before_script:
-  - apk add --update --no-cache --virtual tmp libc-dev gcc make musl-dev ruby ruby-dev ruby-rdoc ruby-irb ruby-json ruby-bundler
   - cd gitlab-ci/reddit
   - bundle install
 
@@ -24,13 +20,17 @@ build_job:
   stage: build
   script:
     # - docker build -t my-docker-image .
+    # - docker build -t my-docker-image .
+    # - docker build -t my-docker-image .
+    - echo 'Build_job'
+    - sleep 60
 
 test_unit_job:
   stage: test
   services:
-  - mongo:latest
+    - mongo:latest
   script:
-  - ruby simpletest.rb
+    - ruby simpletest.rb
 
 test_integration_job:
   stage: test

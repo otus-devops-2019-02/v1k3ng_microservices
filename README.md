@@ -1,6 +1,12 @@
 [![Build Status](https://travis-ci.com/otus-devops-2019-02/v1k3ng_microservices.svg?branch=master)](https://travis-ci.com/otus-devops-2019-02/v1k3ng_microservices)
 
-# Readme homework #16
+# Readme homework #19
+Ссылка на slack-канал для проверки уведомлений от GitLab:  
+https://devops-team-otus.slack.com/messages/CH276EHPX
+
+
+
+# Readme homework #17
 
 **docker run -ti --rm --network none joffotron/docker-net-tools -c ifconfig** - запуск с параметром --network none (без сети, только loopback)  
 
