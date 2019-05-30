@@ -94,21 +94,20 @@ resource "google_compute_instance" "gitlab-main-runner" {
     ssh-keys = "appuser:${file(var.public_key_path)}"
   }
 
-  // provisioner "remote-exec" {
-  //   inline = [
-  //     "curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash",
-  //     "export GOOGLE_APPLICATION_CREDENTIALS=$HOME/gce-credentials.json"
-  //     ]
-  //   connection {
-  //     type        = "ssh"
-  //     user        = "appuser"
-  //     private_key = "${file(var.private_key_path)}"
-  //   }
-  // }
+  provisioner "remote-exec" {
+    inline = [
+      "curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash"
+      ]
+    connection {
+      type        = "ssh"
+      user        = "appuser"
+      private_key = "${file(var.private_key_path)}"
+    }
+  }
 
-  // provisioner "local-exec" {
-  //   command = "ansible-playbook -u appuser -i '${self.network_interface.0.access_config.0.nat_ip},' -e \"host_ip='${self.network_interface.0.access_config.0.nat_ip}'\" --private-key ${var.private_key_path} ../ansible/gitlab-main-runner-install.yml" 
-  // }
+  provisioner "local-exec" {
+    command = "ansible-playbook -u appuser -i '${self.network_interface.0.access_config.0.nat_ip},' -e \"host-ip='${self.network_interface.0.access_config.0.nat_ip}'\" -e \"gitlab-ci-ip='${google_compute_instance.gitlab-ci.network_interface.0.access_config.0.nat_ip}'\" --private-key ${var.private_key_path} ../ansible/gitlab-main-runner-install.yml" 
+  }
 
   // provisioner "remote-exec" {
   //   inline = [

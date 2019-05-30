@@ -2,8 +2,8 @@
 - name: Install DOCKER
   hosts: all
   gather_facts: no
-  vars:
-   host_ip: "{{ ansible_default_ipv4.address }}"
+  # vars:
+  #  host-ip: "{{ ansible_default_ipv4.address }}"
   become: yes
   tasks:
     - name: install python, python-apt for ansible
@@ -40,11 +40,6 @@
       pip:
         name: docker-py
 
-    # - name: add file docker-compose.yml
-    #   template:
-    #     src: templates/docker-compose.yml.j2
-    #     dest: /srv/gitlab/docker-compose.yml
-
     - name: adding appuser to docker group
       user:
         name: appuser
@@ -57,12 +52,21 @@
         curl -L $base/docker-machine-$(uname -s)-$(uname -m) >/tmp/docker-machine &&
         sudo install /tmp/docker-machine /usr/local/bin/docker-machine
 
+    - name: add GOOGLE_APPLICATION_CREDENTIALS env
+      shell: echo "export GOOGLE_APPLICATION_CREDENTIALS=/home/appuser/gce-credentials.json" >> /etc/bash.bashrc
+
     - name: copy gce-credentials.json
       copy:
         src: ../../../credentials-docker.json
         dest: /home/appuser/gce-credentials.json
 
-  # handlers:
-  # - name: reload puma
-  #   become: true
-  #   systemd: name=puma state=restarted
+    # - name: add file /home/appuser/.gitlab-runner/config.toml
+    #   template:
+    #     src: templates/config.toml.j2
+    #     dest: /home/appuser/.gitlab-runner/config.toml
+
+    # - name: change concurrent in file /home/appuser/.gitlab-runner/config.toml
+    #   lineinfile:
+    #     path: /home/appuser/.gitlab-runner/config.toml
+    #     regexp: '^concurrent = 1'
+    #     line: concurrent = 10
