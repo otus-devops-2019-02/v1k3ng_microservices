@@ -105,9 +105,9 @@ resource "google_compute_instance" "gitlab-main-runner" {
     }
   }
 
-  provisioner "local-exec" {
-    command = "ansible-playbook -u appuser -i '${self.network_interface.0.access_config.0.nat_ip},' -e \"host-ip='${self.network_interface.0.access_config.0.nat_ip}'\" -e \"gitlab-ci-ip='${google_compute_instance.gitlab-ci.network_interface.0.access_config.0.nat_ip}'\" --private-key ${var.private_key_path} ../ansible/gitlab-main-runner-install.yml" 
-  }
+  // provisioner "local-exec" {
+  //   command = "ansible-playbook -u appuser -i '${self.network_interface.0.access_config.0.nat_ip},' -e \"host-ip='${self.network_interface.0.access_config.0.nat_ip}'\" -e \"gitlab-ci-ip='${google_compute_instance.gitlab-ci.network_interface.0.access_config.0.nat_ip}'\" --private-key ${var.private_key_path} ../ansible/gitlab-main-runner-install.yml" 
+  // }
 
   // provisioner "remote-exec" {
   //   inline = [

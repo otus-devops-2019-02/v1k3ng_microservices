@@ -6,9 +6,9 @@
   #  host-ip: "{{ ansible_default_ipv4.address }}"
   become: yes
   tasks:
-    - name: install python, python-apt for ansible
-      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal python-apt)
-      changed_when: False
+    # - name: install python, python-apt for ansible
+    #   raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal python-apt)
+    #   changed_when: False
 
     - name: install additional packages
       package: name="{{ item }}" state=present
@@ -18,7 +18,6 @@
         - curl
         - gnupg-agent
         - software-properties-common
-        - python-pip
 
     - name: add docker’s official GPG key
       apt_key:
@@ -32,17 +31,23 @@
 
     - name: install docker
       apt:
-        name: ['docker-ce','docker-ce-cli','containerd.io','docker-compose', 'gitlab-runner']
+        name: ['docker-ce','docker-ce-cli','containerd.io','gitlab-runner']
         state: present
         update_cache: yes
 
-    - name: pip install docker-py
-      pip:
-        name: docker-py
+    # - name: pip install docker-py
+    #   pip:
+    #     name: docker-py
 
     - name: adding appuser to docker group
       user:
         name: appuser
+        groups: docker
+        append: yes
+
+    - name: adding appuser to docker group
+      user:
+        name: gitlab-runner
         groups: docker
         append: yes
 
@@ -52,13 +57,13 @@
         curl -L $base/docker-machine-$(uname -s)-$(uname -m) >/tmp/docker-machine &&
         sudo install /tmp/docker-machine /usr/local/bin/docker-machine
 
-    - name: add GOOGLE_APPLICATION_CREDENTIALS env
-      shell: echo "export GOOGLE_APPLICATION_CREDENTIALS=/home/appuser/gce-credentials.json" >> /etc/bash.bashrc
+    # - name: add GOOGLE_APPLICATION_CREDENTIALS env
+    #   shell: echo "export GOOGLE_APPLICATION_CREDENTIALS=/home/appuser/gce-credentials.json" >> /etc/bash.bashrc
 
-    - name: copy gce-credentials.json
-      copy:
-        src: ../../../credentials-docker.json
-        dest: /home/appuser/gce-credentials.json
+    # - name: copy gce-credentials.json
+    #   copy:
+    #     src: ../../../credentials-docker.json
+    #     dest: /home/appuser/gce-credentials.json
 
     # - name: add file /home/appuser/.gitlab-runner/config.toml
     #   template:
