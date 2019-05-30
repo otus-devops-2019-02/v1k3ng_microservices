@@ -1,4 +1,4 @@
-concurrent = 1
+concurrent = 5
 check_interval = 0
 
 [session_server]
@@ -30,7 +30,7 @@ check_interval = 0
     MachineDriver = "google"
     MachineOptions = [
         "google-project=docker-240004",
-        "google-machine-type=f1-micro",
+        "google-machine-type=g1-small",
         "google-preemptible=true",
         "google-zone=europe-west1-b",
         "google-machine-image=https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/ubuntu-1604-xenial-v20190514"
