@@ -23,7 +23,7 @@ build_job:
     # - docker build -t my-docker-image .
     # - docker build -t my-docker-image .
     - echo 'Build_job'
-    - sleep 60
+    # - sleep 60
 
 test_unit_job:
   stage: test

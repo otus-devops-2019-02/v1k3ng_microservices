@@ -68,11 +68,11 @@ resource "google_compute_instance" "gitlab-ci" {
 }
 
 resource "google_compute_instance" "gitlab-main-runner" {
-  name         = "gitlab-main-runner"
+  name         = "gitlab-main-runner-${count.index}"
   machine_type = "g1-small"
   zone         = "europe-west1-b"
   tags         = ["gitlab-main-runner"]
-
+  count        = 2
   # определение загрузочного диска
   boot_disk {
     initialize_params {
@@ -106,7 +106,7 @@ resource "google_compute_instance" "gitlab-main-runner" {
   }
 
   provisioner "local-exec" {
-    command = "ansible-playbook -u appuser -i '${self.network_interface.0.access_config.0.nat_ip},' -e \"host-ip='${self.network_interface.0.access_config.0.nat_ip}'\" -e \"gitlab-ci-ip='${google_compute_instance.gitlab-ci.network_interface.0.access_config.0.nat_ip}'\" --private-key ${var.private_key_path} ../ansible/gitlab-runner-install.yml" 
+    command = "ansible-playbook -u appuser -i '${self.network_interface.0.access_config.0.nat_ip},' -e \"host-ip='${self.network_interface.0.access_config.0.nat_ip}'\" -e \"gitlab-ci-ip='${google_compute_instance.gitlab-ci.network_interface.0.access_config.0.nat_ip}'\" --private-key ${var.private_key_path} ../ansible/gitlab-runner-standalone-install.yml" 
   }
 
   // provisioner "remote-exec" {

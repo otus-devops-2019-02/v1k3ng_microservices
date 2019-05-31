@@ -37,8 +37,8 @@
         enabled: yes
         daemon_reload: yes
 
-    # - name: change concurrent in file /home/appuser/.gitlab-runner/config.toml
-    #   lineinfile:
-    #     path: /home/appuser/.gitlab-runner/config.toml
-    #     regexp: '^concurrent = 1'
-    #     line: concurrent = 10
+    - name: change concurrent in file /etc/gitlab-runner/config.toml
+      lineinfile:
+        path: /etc/gitlab-runner/config.toml
+        regexp: '^concurrent = 1'
+        line: concurrent = 3
