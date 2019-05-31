@@ -13,7 +13,7 @@ variables:
   DATABASE_URL: 'mongodb://mongo/user_posts'
 
 before_script:
-  - cd gitlab-ci/reddit
+  - cd reddit
   - bundle install
 
 build_job:
