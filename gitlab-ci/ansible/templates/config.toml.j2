@@ -1,4 +1,4 @@
-concurrent = 10
+concurrent = 5
 check_interval = 0
 
 [session_server]
@@ -6,10 +6,9 @@ check_interval = 0
 
 [[runners]]
   name = "runner"
-  url = "http://{{ gitlab-ci-ip }}/"
-  token = "AvjQto32_ew2xYewb4Z4"
+  url = "http://34.76.8.229/"
+  token = "JU2tJ7rJky5ew9D5io1V"
   executor = "docker+machine"
-  limit = 10
   [runners.custom_build_dir]
   [runners.docker]
     tls_verify = false
@@ -25,16 +24,17 @@ check_interval = 0
     [runners.cache.gcs]
       CredentialsFile = "/home/appuser/gce-credentials.json"
   [runners.machine]
-    IdleCount = 2
+    IdleCount = 0
     IdleTime = 60
     MachineDriver = "google"
     MachineName = "%s"
     MachineOptions = [
-        "google-project=docker-240004",
-        "google-machine-type=g1-small",
-        "google-preemptible=true",
-        "google-zone=europe-west1-b"
-    ]
+      "google-project=docker-240004",
+      "google-machine-type=g1-small",
+      "google-preemptible=true",
+      "google-zone=europe-west1-b",
+      "google-use-internal-ip=true"
+      ]
     OffPeakTimezone = ""
     OffPeakIdleCount = 0
     OffPeakIdleTime = 0

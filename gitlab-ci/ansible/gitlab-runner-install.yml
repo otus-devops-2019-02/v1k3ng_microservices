@@ -29,9 +29,15 @@
         repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
         state: present
 
+    # - name: install docker
+    #   apt:
+    #     name: ['docker-ce','docker-ce-cli','containerd.io','gitlab-runner']
+    #     state: present
+    #     update_cache: yes
+
     - name: install docker
       apt:
-        name: ['docker-ce','docker-ce-cli','containerd.io','gitlab-runner']
+        name: ['docker-ce','docker-ce-cli','containerd.io']
         state: present
         update_cache: yes
 
@@ -45,11 +51,11 @@
         groups: docker
         append: yes
 
-    - name: adding appuser to docker group
-      user:
-        name: gitlab-runner
-        groups: docker
-        append: yes
+    # - name: adding appuser to docker group
+    #   user:
+    #     name: gitlab-runner
+    #     groups: docker
+    #     append: yes
 
     - name: install docker-machine
       shell: >
@@ -57,13 +63,23 @@
         curl -L $base/docker-machine-$(uname -s)-$(uname -m) >/tmp/docker-machine &&
         sudo install /tmp/docker-machine /usr/local/bin/docker-machine
 
+    - name: install gitlab-runner
+      shell: >
+        wget -O /usr/local/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64 &&
+        chmod +x /usr/local/bin/gitlab-runner
+
+    - name: add file /etc/systemd/system/gitlab-runner.service
+      template:
+        src: templates/gitlab-runner.service.j2
+        dest: /etc/systemd/system/gitlab-runner.service
+
+    - name: copy gce-credentials.json
+      copy:
+        src: ../../../credentials-docker.json
+        dest: /home/appuser/gce-credentials.json
+
     # - name: add GOOGLE_APPLICATION_CREDENTIALS env
     #   shell: echo "export GOOGLE_APPLICATION_CREDENTIALS=/home/appuser/gce-credentials.json" >> /etc/bash.bashrc
-
-    # - name: copy gce-credentials.json
-    #   copy:
-    #     src: ../../../credentials-docker.json
-    #     dest: /home/appuser/gce-credentials.json
 
     # - name: add file /home/appuser/.gitlab-runner/config.toml
     #   template:
