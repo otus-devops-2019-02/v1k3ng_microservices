@@ -1,0 +1,58 @@
+---
+- name: Install DOCKER
+  hosts: all
+  gather_facts: no
+  vars:
+   host_ip: "{{ ansible_default_ipv4.address }}"
+  become: true
+  tasks:
+    - name: install python, python-apt for ansible
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal python-apt)
+      changed_when: False
+
+    - name: install additional packages
+      package: name="{{ item }}" state=present
+      with_items:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg-agent
+        - software-properties-common
+        - python-pip
+
+    - name: add docker’s official GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: add repo
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+        state: present
+
+    - name: install docker
+      apt:
+        name: ['docker-ce','docker-ce-cli','containerd.io','docker-compose']
+        state: present
+        update_cache: true
+
+    - name: pip install docker-py
+      pip:
+        name: docker-py
+
+    - name: add file docker-compose.yml
+      template:
+        src: templates/docker-compose.yml.j2
+        dest: /srv/gitlab/docker-compose.yml
+
+    - name: adding appuser to docker group
+      user:
+        name: appuser
+        groups: docker
+        append: true
+
+    - name: install docker-machine
+      shell: >
+        base=https://github.com/docker/machine/releases/download/v0.16.0 &&
+        curl -L $base/docker-machine-$(uname -s)-$(uname -m) >/tmp/docker-machine &&
+        sudo install /tmp/docker-machine /usr/local/bin/docker-machine

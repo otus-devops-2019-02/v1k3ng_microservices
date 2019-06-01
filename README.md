@@ -1,6 +1,31 @@
 [![Build Status](https://travis-ci.com/otus-devops-2019-02/v1k3ng_microservices.svg?branch=master)](https://travis-ci.com/otus-devops-2019-02/v1k3ng_microservices)
 
-# Readme homework #16
+# Readme homework #19
+Ссылка на slack-канал для проверки уведомлений от GitLab:  
+https://devops-team-otus.slack.com/messages/CH276EHPX
+
+
+### Задание со * на странице 49
+
+Разворачиваем инстансы Gitlab-CI и gitlab-runner  
+В файле **gitlab-ci/terraform/main.tf** для ресурса **gitlab-main-runner** нужно установить переменную **count** в то количество, какое нужно инстансов с раннерами. Также обратите внимание на необходимые шаблоны и файлы креденшлов в **gitlab-ci/ansible/gitlab-runner-standalone-install.yml**
+```
+terraform apply
+```
+Заходим на web-интсерфейс Gitlab-CI и запоминаем реквизиты для раннеров (адрес и ключ)  
+В файле **gitlab-ci/ansible/gitlab-runner-standalone-register.yml** нужно соответственно задать переменные **gitlab_i** и **gitlab_token**  
+  
+Регистритруем раннеры  
+После работы terraform выведет список IP адресов для инстансов раннера.  
+С каждым из них нужно выполнить:
+```
+ansible-playbook -u appuser -i '<IP>,' --private-key ~/.ssh/appuser gitlab-runner-standalone-register.yml
+```
+Все, у нас есть нужное количество зарегистрированных раннеров в режиме autoscale. Т.е. под каждую job они будут создавать/удалять отдельный инстанс GCP согласно своим параметрам в файле **/etc/gitlab-runner/config.toml**
+
+
+
+# Readme homework #17
 
 **docker run -ti --rm --network none joffotron/docker-net-tools -c ifconfig** - запуск с параметром --network none (без сети, только loopback)  
 

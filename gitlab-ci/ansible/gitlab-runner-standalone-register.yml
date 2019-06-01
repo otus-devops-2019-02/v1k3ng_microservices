@@ -1,0 +1,43 @@
+---
+- name: register gitlab-runner with autoscalling mode
+  hosts: all
+  gather_facts: no
+  vars:
+   gitlab_ip: "34.76.8.229"
+   gitlab_token: "9dZGCuK2gJAZzrde1epB"
+  tasks:
+    - name: register runner
+      shell:
+        sudo gitlab-runner register -n \
+        --url http://{{ gitlab_ip }}/ \
+        --registration-token {{ gitlab_token }} \
+        --executor "docker+machine" \
+        --description "runner" \
+        --docker-image "alpine:latest" \
+        --docker-privileged \
+        --run-untagged \
+        --machine-idle-nodes 2 \
+        --machine-idle-time 60 \
+        --machine-machine-driver google \
+        --machine-machine-name="%s" \
+        --cache-gcs-credentials-file="/home/appuser/gce-credentials.json" \
+        --machine-machine-options="google-project=docker-240004" \
+        --machine-machine-options="google-machine-type=g1-small" \
+        --machine-machine-options="google-preemptible=true" \
+        --machine-machine-options="google-zone=europe-west1-b" \
+        --machine-machine-options="google-use-internal-ip=true" \
+        --locked=false
+
+    - name: start service gitlab-runner
+      become: true
+      service:
+        name: gitlab-runner
+        state: started
+        enabled: true
+        daemon_reload: true
+
+    - name: change concurrent in file /etc/gitlab-runner/config.toml
+      lineinfile:
+        path: /etc/gitlab-runner/config.toml
+        regexp: '^concurrent = 1'
+        line: concurrent = 3
