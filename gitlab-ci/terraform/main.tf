@@ -109,36 +109,7 @@ resource "google_compute_instance" "gitlab-main-runner" {
     command = "ansible-playbook -u appuser -i '${self.network_interface.0.access_config.0.nat_ip},' -e \"host-ip='${self.network_interface.0.access_config.0.nat_ip}'\" -e \"gitlab-ci-ip='${google_compute_instance.gitlab-ci.network_interface.0.access_config.0.nat_ip}'\" --private-key ${var.private_key_path} ../ansible/gitlab-runner-standalone-install.yml" 
   }
 
-  // provisioner "remote-exec" {
-  //   inline = [
-  //     ""
-  //     ]
-  //   connection {
-  //     type        = "ssh"
-  //     user        = "appuser"
-  //     private_key = "${file(var.private_key_path)}"
-  //   }
-  // }
 }
-
-// resource "google_compute_firewall" "firewall_gitlab-ci" {
-//   name = "allow-gitlab-ci-container"
-
-//   # Название сети, в которой действует правило
-//   network = "default"
-
-//   # Какой доступ разрешить
-//   allow {
-//     protocol = "tcp"
-//     ports    = ["9292"]
-//   }
-
-//   # Каким адресам разрешаем доступ
-//   source_ranges = ["0.0.0.0/0"]
-
-//   # Правило применимо для инстансов с перечисленными тэгами
-//   target_tags = ["reddit-app-docker"]
-// }
 
 resource "google_compute_firewall" "firewall_http" {
   name        = "default-allow-http"
@@ -159,23 +130,3 @@ resource "google_compute_firewall" "firewall_http" {
   source_ranges = ["0.0.0.0/0"]
   target_tags = ["gitlab-ci"]
 }
-
-// resource "google_compute_firewall" "firewall_ssh" {
-//   name        = "default-allow-ssh"
-//   description = "Allow SSH from 178.236.210.50"
-
-//   # Название сети, в которой действует правило
-//   network = "default"
-
-//   # Какой доступ разрешить
-//   allow {
-//     protocol = "tcp"
-//     ports    = ["22"]
-//   }
-
-//   # Каким адресам разрешаем доступ
-//   source_ranges = ["178.236.210.50/32"]
-//   target_tags = ["gitlab-ci"]
-// }
-
-
