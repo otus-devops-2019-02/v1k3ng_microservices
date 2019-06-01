@@ -4,7 +4,7 @@
   gather_facts: no
   vars:
    host_ip: "{{ ansible_default_ipv4.address }}"
-  become: yes
+  become: true
   tasks:
     - name: install python, python-apt for ansible
       raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal python-apt)
@@ -34,7 +34,7 @@
       apt:
         name: ['docker-ce','docker-ce-cli','containerd.io','docker-compose']
         state: present
-        update_cache: yes
+        update_cache: true
 
     - name: pip install docker-py
       pip:
@@ -49,7 +49,7 @@
       user:
         name: appuser
         groups: docker
-        append: yes
+        append: true
 
     - name: install docker-machine
       shell: >

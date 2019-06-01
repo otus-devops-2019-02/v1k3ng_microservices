@@ -5,7 +5,6 @@
   vars:
    gitlab_ip: "34.76.8.229"
    gitlab_token: "9dZGCuK2gJAZzrde1epB"
-  # become: yes
   tasks:
     - name: register runner
       shell:
@@ -30,12 +29,12 @@
         --locked=false
 
     - name: start service gitlab-runner
-      become: yes
+      become: true
       service:
         name: gitlab-runner
         state: started
-        enabled: yes
-        daemon_reload: yes
+        enabled: true
+        daemon_reload: true
 
     - name: change concurrent in file /etc/gitlab-runner/config.toml
       lineinfile:
