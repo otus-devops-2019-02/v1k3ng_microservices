@@ -9,6 +9,9 @@ services:
         aliases:
           - post_db
           - comment_db
+      front_net:
+        aliases:
+          - mongodb
   ui:
     image: ${USERNAME}/ui:${SERVVERS}
     ports:
@@ -64,6 +67,15 @@ services:
       front_net:
         aliases: 
           - node-exporter
+  mongodb-exporter:
+    image: mad72/mongodb-exporter:latest
+    user: root
+    command:
+      - '--mongodb.uri=mongodb:27017'
+    networks:
+      front_net:
+        aliases: 
+          - mongodb-exporter
 
 volumes:
   post_db:
