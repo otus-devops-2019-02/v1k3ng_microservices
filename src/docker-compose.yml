@@ -76,6 +76,13 @@ services:
       front_net:
         aliases: 
           - mongodb-exporter
+  blackbox-exporter:
+    image: mad72/blackbox_exporter:latest
+    user: root
+    networks:
+      front_net:
+        aliases: 
+          - blackbox-exporter
 
 volumes:
   post_db:
