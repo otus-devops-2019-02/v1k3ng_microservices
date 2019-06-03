@@ -87,10 +87,19 @@ services:
   blackbox-exporter:
     image: mad72/blackbox_exporter:latest
     user: root
+    ports:
+      - '9115:9115'
     networks:
       front_net:
         aliases: 
           - blackbox-exporter
+
+  cloudprober:
+    image: ${USERNAME}/cloudprober:latest
+    networks:
+      front_net:
+        aliases: 
+          - cloudprober
 
 volumes:
   post_db:

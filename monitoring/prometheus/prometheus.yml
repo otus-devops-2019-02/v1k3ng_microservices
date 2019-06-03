@@ -28,19 +28,20 @@ scrape_configs:
       - targets:
         - 'mongodb-exporter:9216'
 
+  - job_name: 'cloudprober'
+    static_configs:
+      - targets:
+        - 'cloudprober:9313'
+
   - job_name: 'blackbox'
     metrics_path: /probe
     params:
       module: [http_2xx]  # Look for a HTTP 200 response.
-      # module: [icmp]
     static_configs:
       - targets:
-          # - ui
-          # - post
-          # - comment
-        - http://ui:9292    # Target to probe with http.
-        - http://post:9292    # Target to probe with http.
-        - http://comment:9292    # Target to probe with http.
+        - 'http://ui:9292'    # Target to probe with http.
+        - 'http://post:9292'    # Target to probe with http.
+        - 'http://comment:9292'    # Target to probe with http.
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
