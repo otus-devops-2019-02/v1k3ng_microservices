@@ -1,5 +1,6 @@
 version: '3.3'
 services:
+
   post_db:
     image: mongo:3.2
     volumes:
@@ -12,6 +13,7 @@ services:
       front_net:
         aliases:
           - mongodb
+
   ui:
     image: ${USERNAME}/ui:${SERVVERS}
     ports:
@@ -20,6 +22,7 @@ services:
       front_net:
         aliases: 
           - ui
+
   post:
     image: ${USERNAME}/post:${SERVVERS}
     networks:
@@ -29,6 +32,7 @@ services:
       front_net:
         aliases: 
           - post
+
   comment:
     image: ${USERNAME}/comment:${SERVVERS}
     networks:
@@ -38,8 +42,9 @@ services:
       front_net:
         aliases: 
           - comment
+
   prometheus:
-    image: ${USERNAME}/prometheus
+    image: ${USERNAME}/prometheus:latest
     ports:
       - '9090:9090'
     volumes:
@@ -52,6 +57,7 @@ services:
       front_net:
         aliases: 
           - prometheus
+
   node-exporter:
     image: prom/node-exporter:v0.15.2
     user: root
@@ -67,6 +73,7 @@ services:
       front_net:
         aliases: 
           - node-exporter
+
   mongodb-exporter:
     image: mad72/mongodb-exporter:latest
     user: root
@@ -76,6 +83,7 @@ services:
       front_net:
         aliases: 
           - mongodb-exporter
+
   blackbox-exporter:
     image: mad72/blackbox_exporter:latest
     user: root
