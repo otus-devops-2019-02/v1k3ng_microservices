@@ -75,7 +75,7 @@ services:
           - node-exporter
 
   mongodb-exporter:
-    image: mad72/mongodb-exporter:latest
+    image: ${USERNAME}/mongodb-exporter:latest
     user: root
     command:
       - '--mongodb.uri=mongodb:27017'
@@ -85,7 +85,7 @@ services:
           - mongodb-exporter
 
   blackbox-exporter:
-    image: mad72/blackbox_exporter:latest
+    image: ${USERNAME}/blackbox_exporter:latest
     user: root
     ports:
       - '9115:9115'
