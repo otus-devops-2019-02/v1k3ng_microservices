@@ -1,5 +1,12 @@
 [![Build Status](https://travis-ci.com/otus-devops-2019-02/v1k3ng_microservices.svg?branch=master)](https://travis-ci.com/otus-devops-2019-02/v1k3ng_microservices)
 
+# Readme homework #20
+Запустить проект
+```
+cd src && docker-compose up -d
+```
+
+
 # Readme homework #19
 Ссылка на slack-канал для проверки уведомлений от GitLab:  
 https://devops-team-otus.slack.com/messages/CH276EHPX

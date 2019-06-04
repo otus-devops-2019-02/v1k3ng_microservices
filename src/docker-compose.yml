@@ -15,8 +15,7 @@ services:
           - mongodb
 
   ui:
-    build: ui
-    # image: ${USERNAME}/ui:${SERVVERS}
+    image: ${USERNAME}/ui:${SERVVERS}
     ports:
       - ${SERVPORT}:${SERVPORT}/tcp
     networks:
@@ -25,8 +24,7 @@ services:
           - ui
 
   post:
-    build: post-py
-    # image: ${USERNAME}/post:${SERVVERS}
+    image: ${USERNAME}/post:${SERVVERS}
     networks:
       back_net:
         aliases: 
@@ -36,8 +34,7 @@ services:
           - post
 
   comment:
-    build: comment
-    # image: ${USERNAME}/comment:${SERVVERS}
+    image: ${USERNAME}/comment:${SERVVERS}
     networks:
       back_net:
         aliases: 
@@ -47,8 +44,7 @@ services:
           - comment
 
   prometheus:
-    build: ../monitoring/prometheus
-    # image: ${USERNAME}/prometheus:${SERVVERS}
+    image: ${USERNAME}/prometheus:${SERVVERS}
     ports:
       - '9090:9090'
     volumes:
@@ -79,9 +75,10 @@ services:
           - node-exporter
 
   mongodb-exporter:
-    build: ../monitoring/mongodb_exporter
-    # image: ${USERNAME}/mongodb-exporter:${SERVVERS}
+    image: ${USERNAME}/mongodb-exporter:${SERVVERS}
     user: root
+    ports:
+      - '9216:9216'
     command:
       - '--mongodb.uri=mongodb:27017'
     networks:
@@ -90,8 +87,7 @@ services:
           - mongodb-exporter
 
   blackbox-exporter:
-    build: ../monitoring/blackbox_exporter
-    # image: ${USERNAME}/blackbox_exporter:${SERVVERS}
+    image: ${USERNAME}/blackbox_exporter:${SERVVERS}
     user: root
     ports:
       - '9115:9115'
@@ -101,9 +97,7 @@ services:
           - blackbox-exporter
 
   cloudprober:
-    build: ../monitoring/cloudprober
-    # image: ${USERNAME}/cloudprober:${SERVVERS}
-    # image: cloudprober/cloudprober
+    image: ${USERNAME}/cloudprober:${SERVVERS}
     privileged: true
     ports:
       - '9313:9313'
