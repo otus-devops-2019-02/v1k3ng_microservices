@@ -1,3 +1,5 @@
+.PHONY: build_all push_all
+
 USER = mad72
 
 build_all: build_blackbox \
@@ -13,7 +15,7 @@ build_all: build_blackbox \
 	docker build -t $(USER)/prometheus monitoring/prometheus/
 	export USER_NAME=mad72 && cd src/comment/ && bash docker_build.sh
 	export USER_NAME=mad72 && cd src/post-py/ && bash docker_build.sh
-	export USER_NAME=mad72 && cd src/post-py/ && bash docker_build.sh
+	export USER_NAME=mad72 && cd src/ui/ && bash docker_build.sh
 
 build_blackbox: monitoring/blackbox_exporter/blackbox_exporter monitoring/blackbox_exporter/blackbox.yml monitoring/blackbox_exporter/Dockerfile
 	docker build -t $(USER)/blackbox_exporter monitoring/blackbox_exporter/
@@ -27,8 +29,7 @@ build_mongodb_exporter: monitoring/mongodb_exporter/mongodb_exporter monitoring/
 build_prometheus: monitoring/prometheus/prometheus.yml monitoring/prometheus/Dockerfile
 	docker build -t $(USER)/prometheus monitoring/prometheus/
 
-build_comment: src/comment/build_info.txt \
-			src/comment/comment_app.rb \
+build_comment: src/comment/comment_app.rb \
 			src/comment/config.ru \
 			src/comment/docker_build.sh \
 			src/comment/Dockerfile \
@@ -38,8 +39,7 @@ build_comment: src/comment/build_info.txt \
 			src/comment/VERSION
 	export USER_NAME=mad72 && cd src/comment/ && bash docker_build.sh
 
-build_post-py: src/post-py/build_info.txt \
-			src/post-py/docker_build.sh \
+build_post-py: src/post-py/docker_build.sh \
 			src/post-py/Dockerfile \
 			src/post-py/helpers.py \
 			src/post-py/post_app.py \
@@ -47,8 +47,7 @@ build_post-py: src/post-py/build_info.txt \
 			src/post-py/VERSION
 	export USER_NAME=mad72 && cd src/post-py/ && bash docker_build.sh
 
-build_ui: src/ui/build_info.txt \
-			src/ui/config.ru \
+build_ui: src/ui/config.ru \
 			src/ui/docker_build.sh \
 			src/ui/Dockerfile \
 			src/ui/Gemfile \
