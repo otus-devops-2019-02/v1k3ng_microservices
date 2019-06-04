@@ -103,6 +103,10 @@ services:
   cloudprober:
     build: ../monitoring/cloudprober
     # image: ${USERNAME}/cloudprober:${SERVVERS}
+    # image: cloudprober/cloudprober
+    privileged: true
+    ports:
+      - '9313:9313'
     networks:
       front_net:
         aliases: 

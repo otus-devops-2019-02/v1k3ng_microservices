@@ -36,12 +36,12 @@ scrape_configs:
   - job_name: 'blackbox'
     metrics_path: /probe
     params:
-      module: [http_2xx]  # Look for a HTTP 200 response.
+      module: ['icmp']  # Look for a HTTP 200 response.
     static_configs:
       - targets:
-        - 'http://ui:9292'    # Target to probe with http.
-        - 'http://post:9292'    # Target to probe with http.
-        - 'http://comment:9292'    # Target to probe with http.
+        - 'post'    # Target to probe with http.
+        - 'ui'
+        - 'comment'
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
@@ -49,4 +49,3 @@ scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: blackbox-exporter:9115  # The blackbox exporter's real hostname:port.
-
