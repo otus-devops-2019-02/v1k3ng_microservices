@@ -3,7 +3,7 @@
 # Readme homework #20
 Запустить проект
 ```
-cd src && docker-compose up -d
+cd docker && docker-compose up -d
 ```
 
 
