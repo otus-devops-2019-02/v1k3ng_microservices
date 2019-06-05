@@ -98,13 +98,13 @@ push_all: push_blackbox \
 	docker push $(USER)/cadvisor:latest
 	docker push $(USER)/alertmanager:latest
 
-push_cadvisor: cadvisor 
+push_cadvisor: build_cadvisor 
 	docker push $(USER)/cadvisor:latest
 
-push_grafana: grafana 
+push_grafana: build_grafana 
 	docker push $(USER)/grafana:latest
 
-push_alertmanager: alertmanager 
+push_alertmanager: build_alertmanager 
 	docker push $(USER)/alertmanager:latest
 
 push_blackbox: build_blackbox 
