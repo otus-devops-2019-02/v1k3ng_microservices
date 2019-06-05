@@ -1,5 +1,5 @@
 global:
-  slack_api_url: 'https://hooks.slack.com/services/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'
+  slack_api_url: 'https://hooks.slack.com/services/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'
 
 route:
   receiver: 'slack-notifications'
