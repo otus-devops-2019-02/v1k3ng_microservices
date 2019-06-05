@@ -12,3 +12,6 @@ inventory.gcp.yml
 
 # packer
 variables.json
+
+# docker-compose
+.env

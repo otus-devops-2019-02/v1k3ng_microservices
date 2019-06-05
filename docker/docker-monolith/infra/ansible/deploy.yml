@@ -1,0 +1,4 @@
+---
+- import_playbook: for_check.yml
+- import_playbook: install_docker.yml
+- import_playbook: start_container.yml
