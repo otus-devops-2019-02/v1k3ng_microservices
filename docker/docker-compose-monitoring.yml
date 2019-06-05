@@ -1,0 +1,115 @@
+version: '3.3'
+services:
+
+  prometheus:
+    build: ../monitoring/prometheus/
+    # image: ${USER_NAME}/prometheus:${SERVVERS}
+    ports:
+      - '9090:9090'
+    volumes:
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention=1d'
+    networks:
+      front_net:
+        aliases: 
+          - prometheus
+
+  node-exporter:
+    image: prom/node-exporter:v0.15.2
+    user: root
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
+    networks:
+      front_net:
+        aliases: 
+          - node-exporter
+
+  mongodb-exporter:
+    image: ${USER_NAME}/mongodb-exporter:${SERVVERS}
+    user: root
+    ports:
+      - '9216:9216'
+    command:
+      - '--mongodb.uri=mongodb:27017'
+    networks:
+      front_net:
+        aliases: 
+          - mongodb-exporter
+
+  blackbox-exporter:
+    image: ${USER_NAME}/blackbox_exporter:${SERVVERS}
+    user: root
+    ports:
+      - '9115:9115'
+    networks:
+      front_net:
+        aliases: 
+          - blackbox-exporter
+
+  cloudprober:
+    image: ${USER_NAME}/cloudprober:${SERVVERS}
+    privileged: true
+    ports:
+      - '9313:9313'
+    networks:
+      front_net:
+        aliases: 
+          - cloudprober
+
+  cadvisor:
+    image: google/cadvisor:v0.29.0
+    volumes:
+      - '/:/rootfs:ro'
+      - '/var/run:/var/run:rw'
+      - '/sys:/sys:ro'
+      - '/var/lib/docker/:/var/lib/docker:ro'
+    ports:
+      - '8080:8080'
+    networks:
+      front_net:
+        aliases: 
+          - cadvisor
+
+  grafana:
+    image: grafana/grafana:5.0.0
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=secret
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
+    networks:
+      front_net:
+        aliases: 
+          - grafana
+
+  alertmanager:
+    build: ../monitoring/alertmanager/
+    # image: ${USER_NAME}/alertmanager:${SERVVERS}
+    command:
+    - '--config.file=/etc/alertmanager/config.yml'
+    ports:
+    - 9093:9093
+    networks:
+      front_net:
+        aliases: 
+          - alertmanager
+
+volumes:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  front_net:
