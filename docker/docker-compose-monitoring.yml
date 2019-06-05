@@ -66,7 +66,7 @@ services:
           - cloudprober
 
   cadvisor:
-    image: google/cadvisor:v0.29.0
+    image: ${USER_NAME}/cadvisor:${SERVVERS}
     volumes:
       - '/:/rootfs:ro'
       - '/var/run:/var/run:rw'
@@ -80,7 +80,7 @@ services:
           - cadvisor
 
   grafana:
-    image: grafana/grafana:5.0.0
+    image: ${USER_NAME}/grafana:${SERVVERS}
     volumes:
       - grafana_data:/var/lib/grafana
     environment:
@@ -96,8 +96,7 @@ services:
           - grafana
 
   alertmanager:
-    build: ../monitoring/alertmanager/
-    # image: ${USER_NAME}/alertmanager:${SERVVERS}
+    image: ${USER_NAME}/alertmanager:${SERVVERS}
     command:
     - '--config.file=/etc/alertmanager/config.yml'
     ports:

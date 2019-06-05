@@ -8,14 +8,29 @@ build_all: build_blackbox \
 			build_prometheus \
 			build_comment \
 			build_post-py \
-			build_ui
+			build_ui \
+			build_grafana \
+			build_cadvisor \
+			build_alertmanager
 	docker build -t $(USER)/blackbox_exporter monitoring/blackbox_exporter/
 	docker build -t $(USER)/cloudprober monitoring/cloudprober/
 	docker build -t $(USER)/mongodb_exporter monitoring/mongodb_exporter/
 	docker build -t $(USER)/prometheus monitoring/prometheus/
+	docker build -t $(USER)/grafana monitoring/grafana/
+	docker build -t $(USER)/alertamanger monitoring/alertamanger/
+	docker build -t $(USER)/cadvisor monitoring/cadvisor/
 	export USER_NAME=mad72 && cd src/comment/ && bash docker_build.sh
 	export USER_NAME=mad72 && cd src/post-py/ && bash docker_build.sh
 	export USER_NAME=mad72 && cd src/ui/ && bash docker_build.sh
+
+build_cadvisor: monitoring/cadvisor/Dockerfile
+	docker build -t $(USER)/cadvisor monitoring/cadvisor/
+
+build_grafana: monitoring/grafana/Dockerfile
+	docker build -t $(USER)/grafana monitoring/grafana/
+
+build_alertmanager: monitoring/alertmanager/config.yml monitoring/alertmanager/Dockerfile
+	docker build -t $(USER)/alertmanager monitoring/alertmanager/
 
 build_blackbox: monitoring/blackbox_exporter/blackbox_exporter monitoring/blackbox_exporter/blackbox.yml monitoring/blackbox_exporter/Dockerfile
 	docker build -t $(USER)/blackbox_exporter monitoring/blackbox_exporter/
@@ -68,7 +83,10 @@ push_all: push_blackbox \
 			push_prometheus \
 			push_comment \
 			push_post_py \
-			push_ui
+			push_ui \
+			push_grafana \
+			push_alertmanager \
+			push_cadvisor
 	docker push $(USER)/blackbox_exporter:latest
 	docker push $(USER)/cloudprober:latest
 	docker push $(USER)/mongodb_exporter:latest
@@ -76,6 +94,18 @@ push_all: push_blackbox \
 	docker push $(USER)/comment:latest
 	docker push $(USER)/post:latest
 	docker push $(USER)/ui:latest
+	docker push $(USER)/grafana:latest
+	docker push $(USER)/cadvisor:latest
+	docker push $(USER)/alertmanager:latest
+
+push_cadvisor: cadvisor 
+	docker push $(USER)/cadvisor:latest
+
+push_grafana: grafana 
+	docker push $(USER)/grafana:latest
+
+push_alertmanager: alertmanager 
+	docker push $(USER)/alertmanager:latest
 
 push_blackbox: build_blackbox 
 	docker push $(USER)/blackbox_exporter:latest
