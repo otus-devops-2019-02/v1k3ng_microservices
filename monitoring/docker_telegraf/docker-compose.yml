@@ -14,6 +14,22 @@ services:
       - '--storage.tsdb.retention=1d'
     network_mode: host
 
+  telegraf:
+    image: telegraf
+    restart: always
+    environment:
+      HOST_PROC: /rootfs/proc
+      HOST_SYS: /rootfs/sys
+      HOST_ETC: /rootfs/etc
+    network_mode: host
+    ports:
+      - 9216:9216
+    volumes:
+    - /tmp/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    - /var/run/docker.sock:/var/run/docker.sock:ro
+    - /sys:/rootfs/sys:ro
+    - /proc:/rootfs/proc:ro
+    - /etc:/rootfs/etc:ro
 
   grafana:
     image: grafana/grafana:5.0.0
