@@ -11,7 +11,9 @@ build_all: build_blackbox \
 			build_ui \
 			build_grafana \
 			build_cadvisor \
-			build_alertmanager
+			build_alertmanager \
+			build_trickster \
+			build_telegraf
 	docker build -t $(USER)/blackbox_exporter monitoring/blackbox_exporter/
 	docker build -t $(USER)/cloudprober monitoring/cloudprober/
 	docker build -t $(USER)/mongodb_exporter monitoring/mongodb_exporter/
@@ -19,9 +21,17 @@ build_all: build_blackbox \
 	docker build -t $(USER)/grafana monitoring/grafana/
 	docker build -t $(USER)/alertamanger monitoring/alertamanger/
 	docker build -t $(USER)/cadvisor monitoring/cadvisor/
+	docker build -t $(USER)/trickster monitoring/trickster/
+	docker build -t $(USER)/telegraf monitoring/telegraf/
 	export USER_NAME=mad72 && cd src/comment/ && bash docker_build.sh
 	export USER_NAME=mad72 && cd src/post-py/ && bash docker_build.sh
 	export USER_NAME=mad72 && cd src/ui/ && bash docker_build.sh
+
+build_trickster: monitoring/trickster/Dockerfile
+	docker build -t $(USER)/trickster monitoring/trickster/
+
+build_telegraf: monitoring/telegraf/Dockerfile
+	docker build -t $(USER)/telegraf monitoring/telegraf/
 
 build_cadvisor: monitoring/cadvisor/Dockerfile
 	docker build -t $(USER)/cadvisor monitoring/cadvisor/
@@ -86,7 +96,9 @@ push_all: push_blackbox \
 			push_ui \
 			push_grafana \
 			push_alertmanager \
-			push_cadvisor
+			push_cadvisor \
+			push_trickster \
+			push_telegraf
 	docker push $(USER)/blackbox_exporter:latest
 	docker push $(USER)/cloudprober:latest
 	docker push $(USER)/mongodb_exporter:latest
@@ -97,6 +109,14 @@ push_all: push_blackbox \
 	docker push $(USER)/grafana:latest
 	docker push $(USER)/cadvisor:latest
 	docker push $(USER)/alertmanager:latest
+	docker push $(USER)/trickster:latest
+	docker push $(USER)/telegraf:latest
+
+push_trickster: build_trickster
+	docker push $(USER)/trickster:latest
+
+push_telegraf: build_telegraf
+	docker push $(USER)/telegraf:latest
 
 push_cadvisor: build_cadvisor
 	docker push $(USER)/cadvisor:latest
