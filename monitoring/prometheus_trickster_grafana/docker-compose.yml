@@ -14,22 +14,19 @@ services:
       - '--storage.tsdb.retention=1d'
     network_mode: host
 
-  telegraf:
-    image: telegraf
+  trickster:
+    image: tricksterio/trickster
     restart: always
-    environment:
-      HOST_PROC: /rootfs/proc
-      HOST_SYS: /rootfs/sys
-      HOST_ETC: /rootfs/etc
     network_mode: host
+    command:
+      - '-config=/etc/trickster/trickster.conf'
+      - '-origin=http://localhost:9090'
+      - '-log-level=debug'
+      - '-origin-type=prometheus'
     ports:
-      - 9216:9216
+      - '9089:9089'
     volumes:
-    - /tmp/telegraf.conf:/etc/telegraf/telegraf.conf:ro
-    - /var/run/docker.sock:/var/run/docker.sock:ro
-    - /sys:/rootfs/sys:ro
-    - /proc:/rootfs/proc:ro
-    - /etc:/rootfs/etc:ro
+    - /tmp/trickster.conf:/etc/trickster/trickster.conf:ro
 
   grafana:
     image: grafana/grafana:5.0.0
@@ -41,7 +38,7 @@ services:
     depends_on:
       - prometheus
     ports:
-      - 3000:3000
+      - '3000:3000'
     network_mode: host
 
 volumes:
