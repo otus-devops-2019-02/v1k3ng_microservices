@@ -15,7 +15,7 @@ services:
           - mongodb
 
   ui:
-    image: ${USERNAME}/ui:${SERVVERS}
+    image: ${USER_NAME}/ui:${SERVVERS}
     ports:
       - ${SERVPORT}:${SERVPORT}/tcp
     networks:
@@ -24,7 +24,7 @@ services:
           - ui
 
   post:
-    image: ${USERNAME}/post:${SERVVERS}
+    image: ${USER_NAME}/post:${SERVVERS}
     networks:
       back_net:
         aliases: 
@@ -34,7 +34,7 @@ services:
           - post
 
   comment:
-    image: ${USERNAME}/comment:${SERVVERS}
+    image: ${USER_NAME}/comment:${SERVVERS}
     networks:
       back_net:
         aliases: 
@@ -43,72 +43,8 @@ services:
         aliases: 
           - comment
 
-  prometheus:
-    image: ${USERNAME}/prometheus:${SERVVERS}
-    ports:
-      - '9090:9090'
-    volumes:
-      - prometheus_data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--storage.tsdb.retention=1d'
-    networks:
-      front_net:
-        aliases: 
-          - prometheus
-
-  node-exporter:
-    image: prom/node-exporter:v0.15.2
-    user: root
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    command:
-      - '--path.procfs=/host/proc'
-      - '--path.sysfs=/host/sys'
-      - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
-    networks:
-      front_net:
-        aliases: 
-          - node-exporter
-
-  mongodb-exporter:
-    image: ${USERNAME}/mongodb-exporter:${SERVVERS}
-    user: root
-    ports:
-      - '9216:9216'
-    command:
-      - '--mongodb.uri=mongodb:27017'
-    networks:
-      front_net:
-        aliases: 
-          - mongodb-exporter
-
-  blackbox-exporter:
-    image: ${USERNAME}/blackbox_exporter:${SERVVERS}
-    user: root
-    ports:
-      - '9115:9115'
-    networks:
-      front_net:
-        aliases: 
-          - blackbox-exporter
-
-  cloudprober:
-    image: ${USERNAME}/cloudprober:${SERVVERS}
-    privileged: true
-    ports:
-      - '9313:9313'
-    networks:
-      front_net:
-        aliases: 
-          - cloudprober
-
 volumes:
   post_db:
-  prometheus_data:
 
 networks:
   back_net:

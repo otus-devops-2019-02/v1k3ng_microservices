@@ -1,0 +1,1 @@
+FROM tricksterio/trickster

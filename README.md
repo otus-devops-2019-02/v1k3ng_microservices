@@ -1,5 +1,11 @@
 [![Build Status](https://travis-ci.com/otus-devops-2019-02/v1k3ng_microservices.svg?branch=master)](https://travis-ci.com/otus-devops-2019-02/v1k3ng_microservices)
 
+# Readme homework #21
+
+Репозиторий mad72 на Docker Hub
+https://hub.docker.com/search?q=mad72&type=image
+
+
 # Readme homework #20
 Запустить проект
 ```
@@ -8,22 +14,22 @@ cd docker && docker-compose up -d
 
 
 # Readme homework #19
-Ссылка на slack-канал для проверки уведомлений от GitLab:  
+Ссылка на slack-канал для проверки уведомлений от GitLab:
 https://devops-team-otus.slack.com/messages/CH276EHPX
 
 
 ### Задание со * на странице 49
 
-Разворачиваем инстансы Gitlab-CI и gitlab-runner  
+Разворачиваем инстансы Gitlab-CI и gitlab-runner
 В файле **gitlab-ci/terraform/main.tf** для ресурса **gitlab-main-runner** нужно установить переменную **count** в то количество, какое нужно инстансов с раннерами. Также обратите внимание на необходимые шаблоны и файлы креденшлов в **gitlab-ci/ansible/gitlab-runner-standalone-install.yml**
 ```
 terraform apply
 ```
-Заходим на web-интсерфейс Gitlab-CI и запоминаем реквизиты для раннеров (адрес и ключ)  
-В файле **gitlab-ci/ansible/gitlab-runner-standalone-register.yml** нужно соответственно задать переменные **gitlab_i** и **gitlab_token**  
-  
-Регистритруем раннеры  
-После работы terraform выведет список IP адресов для инстансов раннера.  
+Заходим на web-интсерфейс Gitlab-CI и запоминаем реквизиты для раннеров (адрес и ключ)
+В файле **gitlab-ci/ansible/gitlab-runner-standalone-register.yml** нужно соответственно задать переменные **gitlab_i** и **gitlab_token**
+
+Регистритруем раннеры
+После работы terraform выведет список IP адресов для инстансов раннера.
 С каждым из них нужно выполнить:
 ```
 ansible-playbook -u appuser -i '<IP>,' --private-key ~/.ssh/appuser gitlab-runner-standalone-register.yml
@@ -34,20 +40,20 @@ ansible-playbook -u appuser -i '<IP>,' --private-key ~/.ssh/appuser gitlab-runne
 
 # Readme homework #17
 
-**docker run -ti --rm --network none joffotron/docker-net-tools -c ifconfig** - запуск с параметром --network none (без сети, только loopback)  
+**docker run -ti --rm --network none joffotron/docker-net-tools -c ifconfig** - запуск с параметром --network none (без сети, только loopback)
 
 **docker run -ti --rm --network host joffotron/docker-net-tools -c ifconfig** - запуск с параметром --network host (сеть хостовой машины)
 
-**docker network connect \<network\> \<container\>** - подключение дополнительных сетей к уже бегущему контейнеру  
+**docker network connect \<network\> \<container\>** - подключение дополнительных сетей к уже бегущему контейнеру
 
 ### Задание на странице 36
 Можно в файле .env задать переменную COMPOSE_PROJECT_NAME в которой указать имя проекта. Это имя проекта станет префиксом для всех сущностей проекта. Кроме того, опытным путем выяснено, что перфикс зависит от имени директории, в которой находится docker-compose.yml.
-Также можно указать ключ -p (--project-name) NAME и в нем указать нужное имя проекта.  
+Также можно указать ключ -p (--project-name) NAME и в нем указать нужное имя проекта.
 
 
 # Readme homework #16
 
-Настройка docker-machine. Для работы с gce нужно либо указать переменную окружения:  
+Настройка docker-machine. Для работы с gce нужно либо указать переменную окружения:
 ```
 export GOOGLE_PROJECT=docker-240004
 ```
@@ -61,14 +67,14 @@ docker-machine create --driver google \
     docker-host
 ```
 
-Создание образов из **Dockerfile**:  
+Создание образов из **Dockerfile**:
 ```
 docker build -t mad72/post:1.0 ./post-py
 docker build -t mad72/comment:1.0 ./comment
 docker build -t mad72/ui:1.0 ./ui
 ```
-**docker exec -it <container_name> /bin/bash** - подключиться к шеллу контейнера (без docker-machine)  
-**docker network create reddit** - создать сеть reddit для контейнеров  
+**docker exec -it <container_name> /bin/bash** - подключиться к шеллу контейнера (без docker-machine)
+**docker network create reddit** - создать сеть reddit для контейнеров
 
 Запускаем сразу всю пачку созданных контейнеров (без volume):
 ```
@@ -84,7 +90,7 @@ docker run --rm -d --network=reddit --network-alias=post mad72/post:1.0
 docker run --rm -d --network=reddit --network-alias=comment mad72/comment:1.0
 docker run --rm -d --network=reddit -p 9292:9292 mad72/ui:1.0
 ```
-Запуск всей пачки контейнеров **с измененными переменными имен хостов**:  
+Запуск всей пачки контейнеров **с измененными переменными имен хостов**:
 ```
 docker network create reddit
 docker run -d --network=reddit \
@@ -109,21 +115,21 @@ docker run -d --network=reddit \
     mad72/ui:1.0
 ```
 
-**docker kill $(docker ps -q)** - убить весь запущенные контейнеры  
+**docker kill $(docker ps -q)** - убить весь запущенные контейнеры
 
-Используем **--squash** для уменьшения размера контейнеров. Но мне почему-то не помогло ни на килобайт:  
+Используем **--squash** для уменьшения размера контейнеров. Но мне почему-то не помогло ни на килобайт:
 ```
 docker build --squash -t mad72/post:1.0 ./post-py
 docker build --squash -t mad72/comment:1.0 ./comment
 docker build --squash -t mad72/ui:1.0 ./ui
 ```
-**docker volume create reddit_db** - создать volume  
-После чего подключаем volume ключом **-v reddit_db:/data/db**  
+**docker volume create reddit_db** - создать volume
+После чего подключаем volume ключом **-v reddit_db:/data/db**
 
 
 # Readme homework #15
 
-Создание при помощи docker-machine инстанса в GCE:  
+Создание при помощи docker-machine инстанса в GCE:
 ```
 docker-machine create --driver google \
 --google-machine-image https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts \
@@ -131,17 +137,17 @@ docker-machine create --driver google \
 --google-zone europe-west1-b \
 docker-host
 ```
-**docker run --rm -ti tehbilly/htop** - запуск контейнера  
-**docker run --rm --pid host -ti tehbilly/htop** - запуск контейнера в пространстве pid хостовой машины  
-**docker-machine create <имя>** - создать инстанс docker-machine  
+**docker run --rm -ti tehbilly/htop** - запуск контейнера
+**docker run --rm --pid host -ti tehbilly/htop** - запуск контейнера в пространстве pid хостовой машины
+**docker-machine create <имя>** - создать инстанс docker-machine
 **docker-machine rm <имя>** - удалить инстанс docker-machine
 **docker-machine ls** - показать список инстансов docker-machine
-**eval $(docker-machine env <имя>)** - переключение инстансов docker-machine  
+**eval $(docker-machine env <имя>)** - переключение инстансов docker-machine
 **eval $(docker-machine env --unset)** - переключение на локальный инстанс docker-machine
 
 **docker build -t reddit:latest .** - создать образ из Dockerfile
-**docker images -a** - список ВСЕХ images 
-**docker run --name reddit -d --network=host reddit:latest** - запуск контейнера с общей сетью с хостовой машиной  
+**docker images -a** - список ВСЕХ images
+**docker run --name reddit -d --network=host reddit:latest** - запуск контейнера с общей сетью с хостовой машиной
 
 На всякий случай - создание правил файервола
 ```
