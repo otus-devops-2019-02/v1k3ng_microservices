@@ -98,31 +98,31 @@ push_all: push_blackbox \
 	docker push $(USER)/cadvisor:latest
 	docker push $(USER)/alertmanager:latest
 
-push_cadvisor: build_cadvisor 
+push_cadvisor: build_cadvisor
 	docker push $(USER)/cadvisor:latest
 
-push_grafana: build_grafana 
+push_grafana: build_grafana
 	docker push $(USER)/grafana:latest
 
-push_alertmanager: build_alertmanager 
+push_alertmanager: build_alertmanager
 	docker push $(USER)/alertmanager:latest
 
-push_blackbox: build_blackbox 
+push_blackbox: build_blackbox
 	docker push $(USER)/blackbox_exporter:latest
 
 push_cloudprober: build_cloudprober
 	docker push $(USER)/cloudprober:latest
 
-push_mongodb_exporter: build_mongodb_exporter 
+push_mongodb_exporter: build_mongodb_exporter
 	docker push $(USER)/mongodb_exporter:latest
 
-push_prometheus: build_prometheus 
+push_prometheus: build_prometheus
 	docker push $(USER)/prometheus:latest
 
 push_comment: build_comment
 	docker push $(USER)/comment:latest
 
-push_post_py: build_post-py 
+push_post_py: build_post-py
 	docker push $(USER)/post:latest
 
 push_ui: build_ui

@@ -1,15 +1,14 @@
 #!/bin/bash
 
-# sudo echo '{' >> /etc/docker/daemon.json
-# sudo echo '  "metrics-addr" : "127.0.0.1:9323",' >> /etc/docker/daemon.json
-# sudo echo '  "experimental" : true' >> /etc/docker/daemon.json
-# sudo echo '}' >> /etc/docker/daemon.json
+sudo echo '{' >> /etc/docker/daemon.json
+sudo echo '  "metrics-addr" : "127.0.0.1:9323",' >> /etc/docker/daemon.json
+sudo echo '  "experimental" : true' >> /etc/docker/daemon.json
+sudo echo '}' >> /etc/docker/daemon.json
 
 sudo cp prometheus.yml /tmp/
 sudo chmod 777 /tmp/prometheus.yml
 
 sudo service docker restart
-# sudo service docker status
 
 /usr/local/bin/docker-compose up -d
 
