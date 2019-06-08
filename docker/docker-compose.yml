@@ -18,29 +18,51 @@ services:
     image: ${USER_NAME}/ui:${SERVVERS}
     ports:
       - ${SERVPORT}:${SERVPORT}/tcp
+    environment:
+      - POST_SERVICE_HOST=post
+      - POST_SERVICE_PORT=5000
+      - COMMENT_SERVICE_HOST=comment
+      - COMMENT_SERVICE_PORT=9292
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: service.ui
     networks:
       front_net:
-        aliases: 
+        aliases:
           - ui
 
   post:
     image: ${USER_NAME}/post:${SERVVERS}
+    environment:
+      - POST_DATABASE_HOST=post_db
+      - POST_DATABASE=posts
+    depends_on:
+      - post_db
+    ports:
+      - "5000:5000"
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: service.post
     networks:
       back_net:
-        aliases: 
+        aliases:
           - post
       front_net:
-        aliases: 
+        aliases:
           - post
 
   comment:
     image: ${USER_NAME}/comment:${SERVVERS}
     networks:
       back_net:
-        aliases: 
+        aliases:
           - comment
       front_net:
-        aliases: 
+        aliases:
           - comment
 
 volumes:
