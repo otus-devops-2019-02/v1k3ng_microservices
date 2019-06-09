@@ -24,7 +24,9 @@ services:
     ports:
       - "9411:9411"
     networks:
-      - front_net
+      front_net:
+        aliases:
+          - zipkin
 
 networks:
   front_net:

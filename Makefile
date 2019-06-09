@@ -14,18 +14,18 @@ build_all: build_blackbox \
 			build_alertmanager \
 			build_trickster \
 			build_telegraf
-	docker build -t $(USER)/blackbox_exporter monitoring/blackbox_exporter/
-	docker build -t $(USER)/cloudprober monitoring/cloudprober/
-	docker build -t $(USER)/mongodb_exporter monitoring/mongodb_exporter/
-	docker build -t $(USER)/prometheus monitoring/prometheus/
-	docker build -t $(USER)/grafana monitoring/grafana/
-	docker build -t $(USER)/alertamanger monitoring/alertamanger/
-	docker build -t $(USER)/cadvisor monitoring/cadvisor/
-	docker build -t $(USER)/trickster monitoring/trickster/
-	docker build -t $(USER)/telegraf monitoring/telegraf/
-	export USER_NAME=mad72 && cd src/comment/ && bash docker_build.sh
-	export USER_NAME=mad72 && cd src/post-py/ && bash docker_build.sh
-	export USER_NAME=mad72 && cd src/ui/ && bash docker_build.sh
+	# docker build -t $(USER)/blackbox_exporter monitoring/blackbox_exporter/
+	# docker build -t $(USER)/cloudprober monitoring/cloudprober/
+	# docker build -t $(USER)/mongodb_exporter monitoring/mongodb_exporter/
+	# docker build -t $(USER)/prometheus monitoring/prometheus/
+	# docker build -t $(USER)/grafana monitoring/grafana/
+	# docker build -t $(USER)/alertamanger monitoring/alertamanger/
+	# docker build -t $(USER)/cadvisor monitoring/cadvisor/
+	# docker build -t $(USER)/trickster monitoring/trickster/
+	# docker build -t $(USER)/telegraf monitoring/telegraf/
+	# export USER_NAME=mad72 && cd src/comment/ && bash docker_build.sh
+	# export USER_NAME=mad72 && cd src/post-py/ && bash docker_build.sh
+	# export USER_NAME=mad72 && cd src/ui/ && bash docker_build.sh
 
 build_trickster: monitoring/trickster/Dockerfile
 	docker build -t $(USER)/trickster monitoring/trickster/
@@ -99,18 +99,18 @@ push_all: push_blackbox \
 			push_cadvisor \
 			push_trickster \
 			push_telegraf
-	docker push $(USER)/blackbox_exporter:latest
-	docker push $(USER)/cloudprober:latest
-	docker push $(USER)/mongodb_exporter:latest
-	docker push $(USER)/prometheus:latest
-	docker push $(USER)/comment:latest
-	docker push $(USER)/post:latest
-	docker push $(USER)/ui:latest
-	docker push $(USER)/grafana:latest
-	docker push $(USER)/cadvisor:latest
-	docker push $(USER)/alertmanager:latest
-	docker push $(USER)/trickster:latest
-	docker push $(USER)/telegraf:latest
+	# docker push $(USER)/blackbox_exporter:latest
+	# docker push $(USER)/cloudprober:latest
+	# docker push $(USER)/mongodb_exporter:latest
+	# docker push $(USER)/prometheus:latest
+	# docker push $(USER)/comment:latest
+	# docker push $(USER)/post:latest
+	# docker push $(USER)/ui:latest
+	# docker push $(USER)/grafana:latest
+	# docker push $(USER)/cadvisor:latest
+	# docker push $(USER)/alertmanager:latest
+	# docker push $(USER)/trickster:latest
+	# docker push $(USER)/telegraf:latest
 
 push_trickster: build_trickster
 	docker push $(USER)/trickster:latest
