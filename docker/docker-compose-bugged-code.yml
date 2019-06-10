@@ -15,7 +15,7 @@ services:
           - mongodb
 
   ui:
-    image: mad72/ui:bugged
+    image: ${USER_NAME}/ui:bugged
     ports:
       - 9292:9292/tcp
     environment:
@@ -35,7 +35,7 @@ services:
           - ui
 
   post:
-    image: mad72/post:bugged
+    image: ${USER_NAME}/post:bugged
     environment:
       - POST_DATABASE_HOST=post_db
       - POST_DATABASE=posts
@@ -58,7 +58,7 @@ services:
           - post
 
   comment:
-    image: mad72/comment:bugged
+    image: ${USER_NAME}/comment:bugged
     environment:
       - ZIPKIN_ENABLED=true
     networks:
