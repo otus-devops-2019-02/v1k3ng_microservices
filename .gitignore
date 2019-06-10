@@ -15,3 +15,8 @@ variables.json
 
 # docker-compose
 .env
+
+# python specific
+*.pyc
+
+build_info.txt

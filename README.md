@@ -1,4 +1,13 @@
 [![Build Status](https://travis-ci.com/otus-devops-2019-02/v1k3ng_microservices.svg?branch=master)](https://travis-ci.com/otus-devops-2019-02/v1k3ng_microservices)
+# Readme homework #23
+
+
+#### По grok использовал эти ресурсы
+http://grokdebug.herokuapp.com/ - для тестирования паттернов
+https://github.com/elastic/logstash/blob/v1.4.2/patterns/grok-patterns - мануал
+https://github.com/fluent/fluent-plugin-grok-parser - мануал
+https://docs.fluentd.org/configuration/config-file - мануал
+
 
 # Readme homework #21
 
