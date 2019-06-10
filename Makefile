@@ -13,7 +13,8 @@ build_all: build_blackbox \
 			build_cadvisor \
 			build_alertmanager \
 			build_trickster \
-			build_telegraf
+			build_telegraf \
+			build_fluentd
 	# docker build -t $(USER)/blackbox_exporter monitoring/blackbox_exporter/
 	# docker build -t $(USER)/cloudprober monitoring/cloudprober/
 	# docker build -t $(USER)/mongodb_exporter monitoring/mongodb_exporter/
@@ -38,6 +39,9 @@ build_cadvisor: monitoring/cadvisor/Dockerfile
 
 build_grafana: monitoring/grafana/Dockerfile
 	docker build -t $(USER)/grafana monitoring/grafana/
+
+build_fluentd: logging/fluentd/Dockerfile
+	docker build -t $(USER)/fluentd logging/fluentd/
 
 build_alertmanager: monitoring/alertmanager/config.yml monitoring/alertmanager/Dockerfile
 	docker build -t $(USER)/alertmanager monitoring/alertmanager/
@@ -98,7 +102,8 @@ push_all: push_blackbox \
 			push_alertmanager \
 			push_cadvisor \
 			push_trickster \
-			push_telegraf
+			push_telegraf \
+			push_fluentd
 	# docker push $(USER)/blackbox_exporter:latest
 	# docker push $(USER)/cloudprober:latest
 	# docker push $(USER)/mongodb_exporter:latest
@@ -114,6 +119,9 @@ push_all: push_blackbox \
 
 push_trickster: build_trickster
 	docker push $(USER)/trickster:latest
+
+push_fluentd: build_fluentd
+	docker push $(USER)/fluentd:latest
 
 push_telegraf: build_telegraf
 	docker push $(USER)/telegraf:latest
