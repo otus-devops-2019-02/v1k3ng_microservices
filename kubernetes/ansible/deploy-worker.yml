@@ -1,0 +1,131 @@
+---
+- name: deploy workers
+  hosts: workers
+  # vars:
+  #   pod_cidr: "{{ hostvars['ansible_cnio0']['ipv4']['network'] }}"
+  #   pod_cidr: "{{ ansible_facts.ansible_cnio0.ipv4.network }}"
+  tasks:
+    - name: distribute the client and server certificates
+      copy:
+        src: "{{ item }}"
+        dest: ~/
+      with_items:
+        - "certificates/ca.pem"
+        - "certificates/{{ ansible_facts['nodename'] }}-key.pem"
+        - "certificates/{{ ansible_facts['nodename'] }}.pem"
+
+    - name: distribute the kubernetes configuration files
+      copy:
+        src: "{{ item }}"
+        dest: ~/
+      with_items:
+        - "configs/{{ ansible_facts['nodename'] }}.kubeconfig"
+        - "configs/kube-proxy.kubeconfig"
+
+    - name: install socat conntrack ipset
+      become: true
+      apt:
+        name: ['socat', 'conntrack', 'ipset']
+        state: latest
+        update_cache: yes
+
+    - name: download and install worker binaries
+      become: true
+      command: "{{ item }}"
+      args:
+        warn: false
+      with_items:
+        - wget -q --https-only https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.12.0/crictl-v1.12.0-linux-amd64.tar.gz
+        - wget -q --https-only https://storage.googleapis.com/kubernetes-the-hard-way/runsc-50c283b9f56bb7200938d9e207355f05f79f0d17
+        - wget -q --https-only https://github.com/opencontainers/runc/releases/download/v1.0.0-rc5/runc.amd64
+        - wget -q --https-only https://github.com/containernetworking/plugins/releases/download/v0.6.0/cni-plugins-amd64-v0.6.0.tgz
+        - wget -q --https-only https://github.com/containerd/containerd/releases/download/v1.2.0-rc.0/containerd-1.2.0-rc.0.linux-amd64.tar.gz
+        - wget -q --https-only https://storage.googleapis.com/kubernetes-release/release/v1.12.0/bin/linux/amd64/kubectl
+        - wget -q --https-only https://storage.googleapis.com/kubernetes-release/release/v1.12.0/bin/linux/amd64/kube-proxy
+        - wget -q --https-only https://storage.googleapis.com/kubernetes-release/release/v1.12.0/bin/linux/amd64/kubelet
+        - mkdir -p /etc/cni/net.d /opt/cni/bin /var/lib/kubelet /var/lib/kube-proxy /var/lib/kubernetes /var/run/kubernetes
+        - mv runsc-50c283b9f56bb7200938d9e207355f05f79f0d17 runsc
+        - mv runc.amd64 runc
+        - chmod +x kubectl kube-proxy kubelet runc runsc
+        - mv kubectl kube-proxy kubelet runc runsc /usr/local/bin/
+        - tar -xvf crictl-v1.12.0-linux-amd64.tar.gz -C /usr/local/bin/
+        - tar -xvf cni-plugins-amd64-v0.6.0.tgz -C /opt/cni/bin/
+        - tar -xvf containerd-1.2.0-rc.0.linux-amd64.tar.gz -C /
+
+    - name: copy 10-bridge.conf
+      become: true
+      template:
+        src: templates/10-bridge.conf.j2
+        dest: /etc/cni/net.d/10-bridge.conf
+
+    - name: copy 99-loopback.conf
+      become: true
+      copy:
+        src: files/99-loopback.conf
+        dest: /etc/cni/net.d/99-loopback.conf
+
+    - name: Configure containerd
+      become: true
+      file:
+        path: /etc/containerd
+        state: directory
+
+    - name: copy config.toml
+      become: true
+      copy:
+        src: files/config.toml
+        dest: /etc/containerd/config.toml
+
+    - name: copy containerd.service
+      become: true
+      copy:
+        src: files/containerd.service
+        dest: /etc/systemd/system/containerd.service
+
+    - name: configure the kubelet
+      become: true
+      command: "{{ item }}"
+      with_items:
+        - mv {{ ansible_facts['nodename'] }}-key.pem {{ ansible_facts['nodename'] }}.pem /var/lib/kubelet/
+        - mv {{ ansible_facts['nodename'] }}.kubeconfig /var/lib/kubelet/kubeconfig
+        - mv ca.pem /var/lib/kubernetes/
+
+    - name: Create the kubelet-config.yaml configuration file
+      become: true
+      template:
+        src: templates/kubelet-config.yaml.j2
+        dest: /var/lib/kubelet/kubelet-config.yaml
+
+    - name: copy kubelet.service
+      become: true
+      copy:
+        src: files/kubelet.service
+        dest: /etc/systemd/system/kubelet.service
+
+    - name: configure the kubernetes proxy
+      become: true
+      command: mv kube-proxy.kubeconfig /var/lib/kube-proxy/kubeconfig
+
+    - name: copy kube-proxy-config.yaml
+      become: true
+      copy:
+        src: files/kube-proxy-config.yaml
+        dest: /var/lib/kube-proxy/kube-proxy-config.yaml
+
+    - name: copy kube-proxy.service
+      become: true
+      copy:
+        src: files/kube-proxy.service
+        dest: /etc/systemd/system/kube-proxy.service
+
+    - name: enable and start containerd kubelet kube-proxy
+      become: true
+      systemd:
+        state: restarted
+        daemon_reload: yes
+        name: "{{ item }}"
+        enabled: yes
+      with_items:
+        - containerd
+        - kube-proxy
+        - kubelet

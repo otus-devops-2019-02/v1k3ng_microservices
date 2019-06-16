@@ -1,0 +1,180 @@
+---
+- name: deploy controllers
+  hosts: controllers
+  tasks:
+    - name: distribute the client and server certificates
+      copy:
+        src: "{{ item }}"
+        dest: ~/
+      with_items:
+        - "certificates/ca.pem"
+        - "certificates/ca-key.pem"
+        - "certificates/kubernetes-key.pem"
+        - "certificates/kubernetes.pem"
+        - "certificates/service-account-key.pem"
+        - "certificates/service-account.pem"
+
+    - name: distribute the kubernetes configuration files
+      copy:
+        src: "{{ item }}"
+        dest: ~/
+      with_items:
+        - "configs/admin.kubeconfig"
+        - "configs/kube-controller-manager.kubeconfig"
+        - "configs/kube-scheduler.kubeconfig"
+
+    - name: distribute the encryption key
+      copy:
+        src: "configs/encryption-config.yaml"
+        dest: ~/
+
+    - name: install etcd
+      command: "{{ item }}"
+      become: true
+      args:
+        warn: false
+      with_items:
+        - wget -q --https-only https://github.com/coreos/etcd/releases/download/v3.3.9/etcd-v3.3.9-linux-amd64.tar.gz
+        - tar -xvf etcd-v3.3.9-linux-amd64.tar.gz
+        - mv etcd-v3.3.9-linux-amd64/etcd /usr/local/bin/
+        - mv etcd-v3.3.9-linux-amd64/etcdctl /usr/local/bin/
+        - mkdir -p /etc/etcd /var/lib/etcd
+        - cp ca.pem kubernetes-key.pem kubernetes.pem /etc/etcd/
+
+    - name: copy etcd.service
+      become: true
+      template:
+        src: templates/etcd.service.j2
+        dest: /etc/systemd/system/etcd.service
+
+    - name: start etcd
+      become: true
+      systemd:
+        state: started
+        daemon_reload: yes
+        name: etcd.service
+        enabled: yes
+
+    - name: provision the kubernetes control plane
+      command: "{{ item }}"
+      become: true
+      args:
+        warn: false
+      with_items:
+        - mkdir -p /etc/kubernetes/config
+        - wget -q --https-only https://storage.googleapis.com/kubernetes-release/release/v1.12.0/bin/linux/amd64/kube-apiserver
+        - wget -q --https-only https://storage.googleapis.com/kubernetes-release/release/v1.12.0/bin/linux/amd64/kube-controller-manager
+        - wget -q --https-only https://storage.googleapis.com/kubernetes-release/release/v1.12.0/bin/linux/amd64/kube-scheduler
+        - wget -q --https-only https://storage.googleapis.com/kubernetes-release/release/v1.12.0/bin/linux/amd64/kubectl
+        - chmod +x kube-apiserver kube-controller-manager kube-scheduler kubectl
+        - mv kube-apiserver kube-controller-manager kube-scheduler kubectl /usr/local/bin/
+
+    - name: configure the kubernetes API server
+      command: "{{ item }}"
+      become: true
+      args:
+        warn: false
+      with_items:
+        - mkdir -p /var/lib/kubernetes/
+        - mv ca.pem ca-key.pem kubernetes-key.pem kubernetes.pem service-account-key.pem service-account.pem encryption-config.yaml /var/lib/kubernetes/
+
+    - name: copy kube-apiserver.service
+      become: true
+      template:
+        src: templates/kube-apiserver.service.j2
+        dest: /etc/systemd/system/kube-apiserver.service
+
+    - name: start kube-apiserver
+      become: true
+      systemd:
+        state: started
+        daemon_reload: yes
+        name: kube-apiserver.service
+        enabled: yes
+
+    - name: configure the kubernetes controller manager
+      command: mv kube-controller-manager.kubeconfig /var/lib/kubernetes/
+      become: true
+      args:
+        warn: false
+
+    - name: copy kube-controller-manager.service
+      become: true
+      template:
+        src: templates/kube-controller-manager.service.j2
+        dest: /etc/systemd/system/kube-controller-manager.service
+
+    - name: start kube-controller-manager
+      become: true
+      systemd:
+        state: started
+        daemon_reload: yes
+        name: kube-controller-manager.service
+        enabled: yes
+
+    - name: configure the kubernetes scheduler
+      command: mv kube-scheduler.kubeconfig /var/lib/kubernetes/
+      become: true
+      args:
+        warn: false
+
+    - name: copy kube-scheduler.yaml
+      become: true
+      copy:
+        src: files/kube-scheduler.yaml
+        dest: /etc/kubernetes/config/kube-scheduler.yaml
+
+    - name: copy kube-scheduler.service
+      become: true
+      copy:
+        src: files/kube-scheduler.service
+        dest: /etc/systemd/system/kube-scheduler.service
+
+    - name: start the controller services
+      become: true
+      systemd:
+        state: started
+        daemon_reload: yes
+        name: kube-scheduler.service
+        enabled: yes
+
+    - name: install nginx
+      become: true
+      apt:
+        name: nginx
+        state: latest
+        update_cache: yes
+
+    - name: copy kubernetes.default.svc.cluster.local
+      become: true
+      copy:
+        src: files/kubernetes.default.svc.cluster.local
+        dest: /etc/nginx/sites-available/kubernetes.default.svc.cluster.local
+
+    - name: activate kubernetes.default.svc.cluster.local
+      become: true
+      file:
+        src: /etc/nginx/sites-available/kubernetes.default.svc.cluster.local
+        dest: /etc/nginx/sites-enabled/kubernetes.default.svc.cluster.local
+        state: link
+
+    - name: restart nginx
+      become: true
+      systemd:
+        name: nginx
+        state: restarted
+        enabled: yes
+
+    - name: clusterrole and clusterrolebinding
+      copy:
+        src: "{{ item }}"
+        dest: ~/
+      with_items:
+        - files/clusterrole
+        - files/clusterrolebinding
+
+    - name: rbac for kubelet authorization
+      command: "{{ item }}"
+      with_items:
+        - kubectl apply --kubeconfig admin.kubeconfig -f clusterrole
+        - kubectl apply --kubeconfig admin.kubeconfig -f clusterrolebinding
