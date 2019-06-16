@@ -1,4 +1,12 @@
 [![Build Status](https://travis-ci.com/otus-devops-2019-02/v1k3ng_microservices.svg?branch=master)](https://travis-ci.com/otus-devops-2019-02/v1k3ng_microservices)
+# Readme homework #25
+
+https://t.me/kubernetes_ru - русское сообщество Kubernetes в Telegram;
+https://github.com/kelseyhightower/kubernetes-the-hard-way - курс от Kelsey Hightower;
+https://www.katacoda.com/courses/kubernetes - Learn Kubernetes using Interactive Browser-Based Scenarios;
+https://labs.play-with-k8s.com/ - A simple, interactive and fun playground to learn Kubernetes;
+https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+
 # Readme homework #23
 
 
