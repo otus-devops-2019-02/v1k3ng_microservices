@@ -51,6 +51,9 @@ kubectl config set-context context_name \
 ```
 kubectl config use-context context_name
 ```
+minikube service ui
+minikube services list
+minikube addons list
 
 
 
