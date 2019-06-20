@@ -32,67 +32,67 @@ sudo apt-get install -y kubectl
 Инструкция по установке Minikube для разных ОС:
 https://kubernetes.io/docs/tasks/tools/install-minikube/
 
-Обычно порядок конфигурирования kubectl следующий:
-1) Создать cluster:
+Обычно порядок конфигурирования kubectl следующий:  
+1) Создать cluster:  
 ```
 kubectl config set-cluster ... cluster_name
 ```
-2) Создать данные пользователя (credentials):
+2) Создать данные пользователя (credentials):  
 ```
 kubectl config set-credentials ... user_name
 ```
-3) Создать контекст:
+3) Создать контекст:  
 ```
 kubectl config set-context context_name \
 --cluster=cluster_name \
 --user=user_name
 ```
-4) Использовать контекст:
+4) Использовать контекст:  
 ```
 kubectl config use-context context_name
 ```
 ```
-minikube service ui
-minikube services list
-minikube addons list
+minikube service ui  
+minikube services list  
+minikube addons list  
 ```
 
-gcloud container clusters get-credentials k8s-cluster-for-asterisk
+gcloud container clusters get-credentials k8s-cluster-for-asterisk  
 
-http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy - ссылка на dashboard через kube proxy
+http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy - ссылка на dashboard через kube proxy  
 
-kubectl -n kube-system edit service kubernetes-dashboard - таким образом можно редактировать живые сущности на лету. Офигенно.
+kubectl -n kube-system edit service kubernetes-dashboard - таким образом можно редактировать живые сущности на лету. Офигенно.  
 
-https://github.com/kubernetes/dashboard/wiki/Creating-sample-user - про юзеров в k8s
-kubectl -n kube-system describe rolebindings.rbac.authorization.k8s.io kubernetes-dashboard-minimal
+https://github.com/kubernetes/dashboard/wiki/Creating-sample-user - про юзеров в k8s  
+kubectl -n kube-system describe rolebindings.rbac.authorization.k8s.io kubernetes-dashboard-minimal  
 
 
 # Readme homework #25
 
-https://t.me/kubernetes_ru - русское сообщество Kubernetes в Telegram;
-https://github.com/kelseyhightower/kubernetes-the-hard-way - курс от Kelsey Hightower;
-https://www.katacoda.com/courses/kubernetes - Learn Kubernetes using Interactive Browser-Based Scenarios;
-https://labs.play-with-k8s.com/ - A simple, interactive and fun playground to learn Kubernetes;
-https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+https://t.me/kubernetes_ru - русское сообщество Kubernetes в Telegram;  
+https://github.com/kelseyhightower/kubernetes-the-hard-way - курс от Kelsey Hightower;  
+https://www.katacoda.com/courses/kubernetes - Learn Kubernetes using Interactive Browser-Based Scenarios;  
+https://labs.play-with-k8s.com/ - A simple, interactive and fun playground to learn Kubernetes;  
+https://kubernetes.io/docs/reference/kubectl/cheatsheet/  
 
 # Readme homework #23
 
 
 #### По grok использовал эти ресурсы
-http://grokdebug.herokuapp.com/ - для тестирования паттернов
-https://github.com/elastic/logstash/blob/v1.4.2/patterns/grok-patterns - мануал
-https://github.com/fluent/fluent-plugin-grok-parser - мануал
-https://docs.fluentd.org/configuration/config-file - мануал
+http://grokdebug.herokuapp.com/ - для тестирования паттернов  
+https://github.com/elastic/logstash/blob/v1.4.2/patterns/grok-patterns - мануал  
+https://github.com/fluent/fluent-plugin-grok-parser - мануал  
+https://docs.fluentd.org/configuration/config-file - мануал  
 
 
 # Readme homework #21
 
-Репозиторий mad72 на Docker Hub
-https://hub.docker.com/search?q=mad72&type=image
+Репозиторий mad72 на Docker Hub  
+https://hub.docker.com/search?q=mad72&type=image  
 
 
 # Readme homework #20
-Запустить проект
+Запустить проект  
 ```
 cd docker && docker-compose up -d
 ```
