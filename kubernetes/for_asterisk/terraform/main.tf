@@ -10,11 +10,9 @@ provider "google" {
 
 resource "google_container_cluster" "primary" {
   name     = "k8s-cluster-for-asterisk"
-//   location = "${var.region}"
-  zone = "${var.zone}"
+  zone     = "${var.zone}"
   remove_default_node_pool = true
   initial_node_count = 1
-//   disk_size_gb = 10
   addons_config {
     kubernetes_dashboard {
         disabled = "false"
@@ -25,8 +23,7 @@ resource "google_container_cluster" "primary" {
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
   name       = "k8s-cluster-for-asterisk-node-pool"
-//   location   = "${var.region}"
-  zone = "${var.zone}"
+  zone       = "${var.zone}"
   cluster    = "${google_container_cluster.primary.name}"
   node_count = 2
 

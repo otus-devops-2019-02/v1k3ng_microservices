@@ -51,10 +51,20 @@ kubectl config set-context context_name \
 ```
 kubectl config use-context context_name
 ```
+```
 minikube service ui
 minikube services list
 minikube addons list
+```
 
+gcloud container clusters get-credentials k8s-cluster-for-asterisk
+
+http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy - ссылка на dashboard через kube proxy
+
+kubectl -n kube-system edit service kubernetes-dashboard - таким образом можно редактировать живые сущности на лету. Офигенно.
+
+https://github.com/kubernetes/dashboard/wiki/Creating-sample-user - про юзеров в k8s
+kubectl -n kube-system describe rolebindings.rbac.authorization.k8s.io kubernetes-dashboard-minimal
 
 
 # Readme homework #25
