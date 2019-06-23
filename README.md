@@ -7,9 +7,9 @@ kubectl create secret tls ui-ingress --key tls.key --cert tls.crt -n dev
 kubectl describe secret ui-ingress -n dev  
 
 
-https://kubernetes.io/docs/concepts/configuration/secret/
-https://software.danielwatrous.com/generate-tls-secret-for-kubernetes/
-kubectl get secret ui-ingress -o yaml
+https://kubernetes.io/docs/concepts/configuration/secret/ - мануал на офсайте
+https://software.danielwatrous.com/generate-tls-secret-for-kubernetes/ - статья о секретах  
+`kubectl get secret ui-ingress -o yaml` - вот так можно достать готовый yml
 
 # Readme homework #26
 
