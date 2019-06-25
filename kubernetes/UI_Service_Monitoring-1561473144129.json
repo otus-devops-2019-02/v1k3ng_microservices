@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 3,
-  "iteration": 1561473136069,
+  "iteration": 1561481553439,
   "links": [],
   "panels": [
     {
@@ -28,8 +28,8 @@
       "description": "All HTTP requests",
       "fill": 1,
       "gridPos": {
-        "h": 9,
-        "w": 12,
+        "h": 12,
+        "w": 22,
         "x": 0,
         "y": 0
       },
@@ -58,7 +58,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(ui_request_count{namespace=~\"$namespace\"}[1m])",
+          "expr": "ui_request_count{kubernetes_namespace=~\"$namespace\"}",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -124,7 +124,7 @@
         "definition": "label_values(namespace)",
         "hide": 0,
         "includeAll": true,
-        "label": "Env",
+        "label": "namespace",
         "multi": true,
         "name": "namespace",
         "options": [],
@@ -142,8 +142,8 @@
     ]
   },
   "time": {
-    "from": "2019-06-05T04:12:06.098Z",
-    "to": "now"
+    "from": "2019-06-25T15:48:19.744Z",
+    "to": "2019-06-25T16:52:33.511Z"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -173,5 +173,5 @@
   "timezone": "",
   "title": "UI_Service_Monitoring",
   "uid": "R8o__LMZk",
-  "version": 3
+  "version": 5
 }
